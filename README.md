@@ -1,4 +1,4 @@
-MediTrip
+Social Media Manager
 ===============
 
 Build Tools
