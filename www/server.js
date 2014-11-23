@@ -30,7 +30,7 @@ env.port = process.env.PORT || env.port;
 
 // https://github.com/ttezel/twit
 //var stream = twitter.stream('statuses/sample', {language: 'en'});
-//var stream = twitter.stream('statuses/filter',{track:['#'],language:'en'})
+var stream = twitter.stream('statuses/filter',{track:['#'],language:'en'})
 io.on('connection', function(socket){
 	console.log('User connected ... Starting Stream connection');
 
