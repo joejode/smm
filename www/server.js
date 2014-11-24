@@ -17,8 +17,33 @@ var http 	= require('http').Server(app),
 	io 		= require('socket.io')(http),
 	Twitter = require('twit'),
 	config 	= require('./config.json'),
-	twitter = new Twitter(config);
+	twitter = new Twitter(config),
+	Kinvey = require('kinvey');
 var fs = require('fs');
+
+
+var init_promise = Kinvey.init({
+	appKey :'kid_-J6daSylv',
+	appSecret : 'ae20011eed2f46938b92bcd7ca6fb922'
+});
+
+init_promise.then(function(activeUser){
+	console.log("Kinvey successfully initialize");
+
+	var ping_promise = Kinvey.ping();
+
+	ping_promise.then(function(response){
+		console.log("Kiney Ping Success. Kinvery service is alive, version: " + response.version + ", response: " + response.kinvey);
+	}, function(error){
+		console.log("Kinvey Ping Failed. Response: " + error.description);
+	});
+
+}, function(error) {
+	console.log("Kinvery failed to initialize");
+});
+
+//var ping_promise = Kinvey.ping();
+
 
 app.use('/', express.static(__dirname + '/'));
 

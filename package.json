@@ -10,7 +10,8 @@
     "start": "node www/server.js"
   },
   "dependencies": {
-    "express": "4.10.2"
+    "express": "4.10.2",
+    "kinvey": "^1.1.8"
   },
   "devDependencies": {
     "socket.io": "^1.2.0",
