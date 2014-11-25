@@ -21,7 +21,17 @@ var http 	= require('http').Server(app),
 	Kinvey = require('kinvey');
 var fs = require('fs');
 
+app.use('/', express.static(__dirname + '/'));
 
+app.get('/', function(req, res) {
+	res.sendFile(__dirname + '/index.html')
+});
+
+env.port = process.env.PORT || env.port;
+
+/************** KINVEY***************/
+
+//http://devcenter.kinvey.com/nodejs/guides/getting-started
 var init_promise = Kinvey.init({
 	appKey :'kid_-J6daSylv',
 	appSecret : 'ae20011eed2f46938b92bcd7ca6fb922'
@@ -30,56 +40,133 @@ var init_promise = Kinvey.init({
 init_promise.then(function(activeUser){
 	console.log("Kinvey successfully initialize");
 
-	var ping_promise = Kinvey.ping();
+	//verify communication with kinvey
+	pingKinvey();
 
-	ping_promise.then(function(response){
-		console.log("Kiney Ping Success. Kinvery service is alive, version: " + response.version + ", response: " + response.kinvey);
-	}, function(error){
-		console.log("Kinvey Ping Failed. Response: " + error.description);
-	});
+	login();
 
 }, function(error) {
 	console.log("Kinvery failed to initialize");
 });
 
-//var ping_promise = Kinvey.ping();
+function signUp()
+{
+	var promise = Kinvey.User.signup({
+	    username : 'username',
+	    password : 'password'
+	}, {
+	    success: function(response) {
+	        console.log("Successfully signed up");
+	        streamTweets();
+	    }
+	});
+}
 
+function login()
+{
+	var promise = Kinvey.User.login('username', 'password', {
+	    success: function(response) {
+	        console.log("Successfully logged in");
+	        streamTweets();
+	    }
+	});
+}
+function pingKinvey()
+{
+	
+	var ping_promise = Kinvey.ping(); 
 
-app.use('/', express.static(__dirname + '/'));
-
-app.get('/*', function(req, res) {
-	res.sendFile(__dirname + '/index.html')
-});
-
-env.port = process.env.PORT || env.port;
+	ping_promise.then(function(response){
+		console.log("Kiney Ping Success. Kinvery service is alive, version: " + response.version + ", response: " + response.kinvey);
+	}, function(error){
+		console.log("Kinvey Ping Failed. Response: " + error.description);
+	});	
+}
 
 // https://github.com/ttezel/twit
 //var stream = twitter.stream('statuses/sample', {language: 'en'});
-var stream = twitter.stream('statuses/filter',{track:['#'],language:'en'})
-io.on('connection', function(socket){
-	console.log('User connected ... Starting Stream connection');
+/*app.get('/api/user',function(req,res){
+	var promise = Kinvey.DataStore.find('Users',null,{
+		success: function(users){
+			res.send(users);
+		}
+	});
+});*/
+app.get('/api/hash/:word',function(req,res){
+	var hash = req.param("word");
+	console.log(hash);
+	console.log("Request for hashtag");
+	
+	storeHashPhrase(hash);
+	res.send(hash);
+});
 
-	//In order to minimise API usage, we only start stream from twitter when user connected
-	stream.on('tweet', function(tweet){
-		//When Stream is received from twitter
-		io.emit('new tweet' ,tweet); //Send to client via a push
+function storeHashPhrase(hash)
+{
+	console.log(Kinvey.getActiveUser()._id);
+	var obj = {
+				hashtag: hash,
+				user_id : Kinvey.getActiveUser()._id,
+			  };
+	saveToKinvey('Hashes',obj);
+}
+
+function saveToKinvey(table,obj)
+{
+	var promise = Kinvey.DataStore.save(table,obj,
+				{
+					success: function(response){
+						console.log("Saved successfully to "+table);
+				},
+					error:function(err){
+						console.log("Saved to "+table+" Failed");
+						console.log(err);
+				}
+			});
+}
+
+function streamTweets() {
+	var stream = twitter.stream('statuses/filter',{track:['#'],language:'en'})
+	io.on('connection', function(socket){
+		console.log('User connected ... Starting Stream connection');
+
+		//In order to minimise API usage, we only start stream from twitter when user connected
+		stream.on('tweet', function(tweet){
+			//When Stream is received from twitter
+			io.emit('new tweet' ,tweet); //Send to client via a push
+
+			var promise = Kinvey.DataStore.save('Tweets',{
+				_id : tweet.id,
+				user_id : Kinvey.getActiveUser()._id,
+				//user_id:tweet.user.id,
+				created_at: tweet.created_at,
+				text: tweet.text
+
+			}, {
+				success: function(response){
+					console.log("Tweet saved successfully");
+				},
+				error:function(err){
+					console.log("Fail");
+					console.log(err);
+				}
+			});
+		});
+
+		socket.on('disconnect', function(){
+			console.log("User disconnected");
+			stream.stop();
+		});//disconnects after  page refresh
+		// disconnect after 60 seconds from collecting tweets
+	/*
+		setTimeout(function(){
+			stream.stop();
+			console.log("disconnected");
+		}, 60000);
+	*/
 	});
 
-
-	socket.on('disconnect', function(){
-		console.log("User disconnected");
-		stream.stop();
-	});//disconnects after  page refresh
-
-
-	// disconnect after 60 seconds from collecting tweets
-/*
-	setTimeout(function(){
-		stream.stop();
-		console.log("disconnected");
-	}, 60000);
-*/
-});
+}
 
 function setUpListeners(socket){
 
@@ -88,4 +175,3 @@ function setUpListeners(socket){
 http.listen(env.port, function(){
 	console.log("App running for the '%s' environment on port %s", envKey, env.port);
 });
-
