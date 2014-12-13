@@ -24,6 +24,6 @@
 
 			return tweetTemplate;
 		}
-	
+
 	
 }(this));

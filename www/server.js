@@ -15,6 +15,7 @@ var express = require('express');
 var app = express();
 var http 	= require('http').Server(app),
 	io 		= require('socket.io')(http),
+	bodyParser = require('body-parser'),
 	Twitter = require('twit'),
 	config 	= require('./config.json'),
 	twitter = new Twitter(config),
@@ -22,6 +23,8 @@ var http 	= require('http').Server(app),
 var fs = require('fs');
 
 app.use('/', express.static(__dirname + '/'));
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 app.get('/', function(req, res) {
 	res.sendFile(__dirname + '/index.html')
@@ -43,34 +46,43 @@ init_promise.then(function(activeUser){
 	//verify communication with kinvey
 	pingKinvey();
 
-	login();
-
 }, function(error) {
 	console.log("Kinvery failed to initialize");
 });
 
-function signUp()
+function signUp(res,username,password)
 {
 	var promise = Kinvey.User.signup({
-	    username : 'username',
-	    password : 'password'
+	    username : username,
+	    password : password
 	}, {
 	    success: function(response) {
 	        console.log("Successfully signed up");
-	        streamTweets();
+	        res.status(200).send(response);
+	    },
+	    error: function(err){
+	    	console.log(err);
+	    	res.status(400).send(err);
 	    }
 	});
 }
 
-function login()
+function login(res, username, password)
 {
-	var promise = Kinvey.User.login('username', 'password', {
+	var promise = Kinvey.User.login(username, password, {
 	    success: function(response) {
 	        console.log("Successfully logged in");
-	        streamTweets();
+	        //streamTweets();
+	        console.log(response);
+	        res.status(200).send(response)
+	    },
+	    error: function(err){
+	    	console.log(err);
+	    	res.status(401).send(err);
 	    }
 	});
 }
+
 function pingKinvey()
 {
 	
@@ -99,6 +111,28 @@ app.get('/api/hash/:word',function(req,res){
 	
 	storeHashPhrase(hash);
 	res.send(hash);
+});
+
+app.post('/api/login/',function(req,res)
+{
+	var username = req.body.username;
+	var password = req.body.password;
+
+	console.log("Request for login");
+	console.log(username);
+	console.log(password);
+	
+	login(res, username,password);
+});
+
+app.post('/api/signUp/',function(req,res){
+
+	var username = req.body.username;
+	var password = req.body.username;
+
+	console.log("Request to sign up");
+
+	signUp(res,username,password);
 });
 
 function storeHashPhrase(hash)
