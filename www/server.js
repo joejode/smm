@@ -22,6 +22,8 @@ var http 	= require('http').Server(app),
 	Kinvey = require('kinvey');
 var fs = require('fs');
 
+var negativity = require('Sentimental').negativity;
+
 app.use('/', express.static(__dirname + '/'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -83,6 +85,23 @@ function login(res, username, password)
 	});
 }
 
+function logout(res)
+{
+	var user = Kinvey.getActiveUser();
+	if(null !== user) {
+	    var promise = Kinvey.User.logout({
+	        success: function(response) {
+	            console.log("Successfully logged out");
+	            res.status(200).send(response);
+	        },
+	        error: function(err) {
+	        	console.log(err);
+	        	res.status(500).send(err);
+	        }
+	    });
+	}
+}
+
 function pingKinvey()
 {
 	
@@ -104,13 +123,14 @@ function pingKinvey()
 		}
 	});
 });*/
-app.get('/api/hash/:word',function(req,res){
-	var hash = req.param("word");
-	console.log(hash);
-	console.log("Request for hashtag");
-	
-	storeHashPhrase(hash);
-	res.send(hash);
+app.post('/api/negativity/',function(req,res){
+	var phrase = req.body.phrase;
+	console.log(phrase);
+	console.log("Request for negativity score");
+	var scoreObj = negativity(phrase);
+	console.log(scoreObj);
+
+	res.send(scoreObj);
 });
 
 app.post('/api/login/',function(req,res)
@@ -125,6 +145,12 @@ app.post('/api/login/',function(req,res)
 	login(res, username,password);
 });
 
+app.post('/api/logout/',function(req,res){
+	console.log("Request for logout");
+	
+	logout(res);
+
+});
 app.post('/api/signUp/',function(req,res){
 
 	var username = req.body.username;
