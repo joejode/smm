@@ -29,7 +29,7 @@ function login() {
     $.post("/api/login", user.profile).done(function(data) {
         console.log("Successfully logged in");
         console.log(data);
-        window.location.href = "http://localhost:8888/";
+        window.location.href = "http://localhost:8888/main.html";
     }).fail(function(err) {
         console.log("Something went wrong");
         console.log(err);
