@@ -30,7 +30,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.get('/', function(req, res) {
-	res.sendFile(__dirname + '/index.html')
+	res.sendFile(__dirname + '/login.html')
 });
 
 env.port = process.env.PORT || env.port;
