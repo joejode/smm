@@ -1,8 +1,6 @@
 (function(window){
 
 	$(document).ready(function(){
-
-		
 		var socket = io.connect();
 		socket.on('new tweet', function(tweet){
 		    console.log(tweet)
@@ -23,7 +21,32 @@
 						     '</div>';
 
 			return tweetTemplate;
-		}
+	}
 	
-	
+	$("#loginForm").submit(function(e)
+	{
+		e.preventDefault();
+	});
+
 }(this));
+
+var user = {
+	"profile": {
+		"email": null,
+		"password": null
+	}
+};
+
+
+function login()
+{
+	console.log("Log in function!");
+	user.profile.email = $("#inputEmail").val();
+	user.profile.password = $("#inputPassword").val();
+
+	console.log(user);
+}
+
+// call the /api/authenticate endpt and check for active user
+// if authenticated then assign values to user object
+// else send the user to login page

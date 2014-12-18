@@ -96,9 +96,13 @@ app.get('/api/hash/:word',function(req,res){
 	var hash = req.param("word");
 	console.log(hash);
 	console.log("Request for hashtag");
-	
+	4
 	storeHashPhrase(hash);
 	res.send(hash);
+});
+
+app.get('api/authenticate', function(req,res){
+	// check with Kinvey if there is an active user
 });
 
 function storeHashPhrase(hash)
