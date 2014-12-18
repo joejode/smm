@@ -28,7 +28,6 @@
 		e.preventDefault();
 	});
 
-
 	
 }(this));
 
@@ -56,6 +55,14 @@ function login()
 	.fail(function(err) {
 	    console.log("Something went wrong");
 		console.log(err);
+	});
+}
+
+function logout (){
+	$.post("/api/logout")
+	.done(function(){
+		console.log("Successfully logged out");
+		window.location.href ="http://localhost:8888/login.html";
 	});
 }
 

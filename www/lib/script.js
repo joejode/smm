@@ -36,6 +36,13 @@ function login() {
     });
 }
 
+function logout() {
+    $.post("/api/logout").done(function() {
+        console.log("Successfully logged out");
+        window.location.href = "http://localhost:8888/login.html";
+    });
+}
+
 var newUser = {
     profile: {
         username: null,
