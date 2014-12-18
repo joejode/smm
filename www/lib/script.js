@@ -6,8 +6,11 @@
             $("#tweet_logs").append(addTweetToDom(tweet));
         });
     });
+    function deleteFromDB() {
+        console.log("DELETED! :D");
+    }
     function addTweetToDom(tweet) {
-        var tweetTemplate = '<div class="col-md-12 col-sm-12">' + '<div class="well"> ' + '<form class="form-horizontal" role="form">' + '<div class="form-group" style="padding:14px;">' + '<textarea class="form-control">' + tweet.text + "</textarea>" + "</div>" + '<button class="btn btn-success pull-right" type="button">Post</button><ul class="list-inline"><li><a href="#"><i class="glyphicon glyphicon-align-left"></i></a></li><li><a href="#"><i class="glyphicon glyphicon-align-center"></i></a></li><li><a href="#"><i class="glyphicon glyphicon-align-right"></i></a></li></ul>' + "</form>" + "</div> " + "</div>";
+        var tweetTemplate = '<div class="col-md-12 col-sm-12">' + '<div class="well"> ' + '<form class="form-horizontal" role="form">' + '<div class="form-group" style="padding:14px;">' + '<textarea class="form-control">' + tweet.text + "</textarea>" + "</div>" + '<button class="btn btn-danger pull-right" type="button">Bad</button>\n						                <button class="btn btn-success pull-right" type="button">Good</button><ul class="list-inline"><li><a href="#"><i class="glyphicon glyphicon-align-left"></i></a></li><li><a href="#"><i class="glyphicon glyphicon-align-center"></i></a></li><li><a href="#"><i class="glyphicon glyphicon-align-right"></i></a></li></ul>' + "</form>" + "</div> " + "</div>";
         return tweetTemplate;
     }
     $("form").submit(function(e) {
@@ -35,6 +38,17 @@ function login() {
         console.log(err);
     });
 }
+
+String.prototype.hashCode = function() {
+    var hash = 0;
+    if (this.length == 0) return hash;
+    for (i = 0; i < this.length; i++) {
+        char = this.charCodeAt(i);
+        hash = (hash << 5) - hash + char;
+        hash = hash & hash;
+    }
+    return hash;
+};
 
 var newUser = {
     profile: {
