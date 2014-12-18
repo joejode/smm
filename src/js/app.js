@@ -29,6 +29,7 @@
 	});
 
 	
+
 }(this));
 
 var user = {
@@ -73,6 +74,26 @@ var newUser ={
 	}
 };
 
+
+var hashtag = {
+		"hash" : null
+	};
+
+function addHashToKinvey()
+{
+	console.log("Adding Hash to Kinvey:");
+
+	hashtag.hash = $("#hash").val();
+	console.log(hashtag.hash);
+	$.post("/api/storeHash/", hashtag)
+	.done(function(){
+		console.log("Successfully added hash to kinvey");
+	})
+	.fail(function(err){
+		console.log("Something went wrong");
+	});
+}
+
 function signup()
 {
 	console.log("Sign-up function");
@@ -91,6 +112,8 @@ function signup()
 	});
 	console.log(newUser);
 }
+
+
 // call the /api/authenticate endpt and check for active user
 // if authenticated then assign values to user object
 // else send the user to login page
