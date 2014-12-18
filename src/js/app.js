@@ -83,6 +83,7 @@ function signup()
 	.done(function(data){
 		console.log("Successfully signed up");
 		console.log(data);
+		window.location.href ="http://localhost:8888/main.html";
 	})
 	.fail(function(err){
 		console.log("Something went wrong");
