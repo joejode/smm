@@ -56,7 +56,7 @@ init_promise.then(function(activeUser){
 function signUp(res,username,password)
 {
 	password = crypto.createHash('sha1').update(password + "salt").digest('hex');
-	
+
 	var promise = Kinvey.User.signup({
 	    username : username,
 	    password : password
