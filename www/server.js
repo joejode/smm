@@ -176,6 +176,13 @@ app.post('/api/signUp/',function(req,res){
 	signUp(res,username,password);
 });
 
+app.post('/api/storeHash/',function(req,res){
+	var hash = req.body.hash;
+
+	console.log("Request to store hash: " + hash);
+	storeHashPhrase(hash);
+});
+
 app.get('api/authenticate', function(req,res){
 	// check with Kinvey if there is an active user
 });
