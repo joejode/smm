@@ -8,6 +8,10 @@
 		});
 	});
 
+	function deleteFromDB(){
+		console.log("DELETED! :D");
+	}
+
 	function addTweetToDom(tweet){
 			var tweetTemplate='<div class="col-md-12 col-sm-12">'+
 						          '<div class="well"> ' +
@@ -15,7 +19,8 @@
 						                '<div class="form-group" style="padding:14px;">'+
 						                  '<textarea class="form-control">'+tweet.text+'</textarea>'+
 						                '</div>'+
-						                '<button class="btn btn-success pull-right" type="button">Post</button><ul class="list-inline"><li><a href="#"><i class="glyphicon glyphicon-align-left"></i></a></li><li><a href="#"><i class="glyphicon glyphicon-align-center"></i></a></li><li><a href="#"><i class="glyphicon glyphicon-align-right"></i></a></li></ul>'+
+						                '<button class="btn btn-danger pull-right" type="button">Bad</button>
+						                <button class="btn btn-success pull-right" type="button">Good</button><ul class="list-inline"><li><a href="#"><i class="glyphicon glyphicon-align-left"></i></a></li><li><a href="#"><i class="glyphicon glyphicon-align-center"></i></a></li><li><a href="#"><i class="glyphicon glyphicon-align-right"></i></a></li></ul>'+
 						              '</form>'+
 						          '</div> '+
 						     '</div>';
@@ -39,6 +44,12 @@ var user = {
 };
 
 
+//Takes array of tweets and sorts it by negativity - most negative first.
+function sortByNegativity(tweets){
+	tweets.sort(function(a,b){
+		return a.score-b.score;
+	});
+}
 
 function login()
 {
@@ -58,6 +69,7 @@ function login()
 	});
 }
 
+<<<<<<< HEAD
 function logout (){
 	$.post("/api/logout")
 	.done(function(){
@@ -66,6 +78,21 @@ function logout (){
 	});
 }
 
+=======
+//Simple hash function for passwords.
+String.prototype.hashCode = function(){
+	var hash = 0;
+	if (this.length == 0) return hash;
+	for (i = 0; i < this.length; i++) {
+		char = this.charCodeAt(i);
+		hash = ((hash<<5)-hash)+char;
+		hash = hash & hash; // Convert to 32bit integer
+	}
+	return hash;
+}
+
+
+>>>>>>> bf4dec5a9be0abf838c822c05153f9b8405b251c
 var newUser ={
 	"profile" : {
 		"username": null,
