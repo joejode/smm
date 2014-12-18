@@ -23,30 +23,67 @@
 			return tweetTemplate;
 	}
 	
-	$("#loginForm").submit(function(e)
+	$("form").submit(function(e)
 	{
 		e.preventDefault();
 	});
 
+
+	
 }(this));
 
 var user = {
 	"profile": {
-		"email": null,
+		"username": null,
 		"password": null
 	}
 };
 
 
+
 function login()
 {
 	console.log("Log in function!");
-	user.profile.email = $("#inputEmail").val();
+	user.profile.username = $("#inputEmail").val();
 	user.profile.password = $("#inputPassword").val();
 
-	console.log(user);
+	$.post("/api/login", user.profile)
+	.done(function(data) {
+	    console.log("Successfully logged in");
+		console.log(data);
+		window.location.href ="http://localhost:8888/";
+	 })
+	.fail(function(err) {
+	    console.log("Something went wrong");
+		console.log(err);
+	});
 }
 
+var newUser ={
+	"profile" : {
+		"username": null,
+		"password": null
+	}
+};
+
+function signup()
+{
+	console.log("Sign-up function");
+	newUser.profile.username = $("#inputSignUpEmail").val();
+	newUser.profile.password = $("#inputSignUpPassword").val();
+
+	$.post("/api/signup",newUser.profile)
+	.done(function(data){
+		console.log("Successfully signed up");
+		console.log(data);
+	})
+	.fail(function(err){
+		console.log("Something went wrong");
+		console.log(err);
+	});
+	console.log(newUser);
+}
 // call the /api/authenticate endpt and check for active user
 // if authenticated then assign values to user object
 // else send the user to login page
+

@@ -42,3 +42,10 @@ footer {
   padding-top: 20px;
   text-align: center;
 }
+
+/* line 40, ../../src/scss/login.scss */
+#logo {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}

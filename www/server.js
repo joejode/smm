@@ -19,7 +19,8 @@ var http 	= require('http').Server(app),
 	Twitter = require('twit'),
 	config 	= require('./config.json'),
 	twitter = new Twitter(config),
-	Kinvey = require('kinvey');
+	Kinvey = require('kinvey'),
+	crypto = require('crypto');
 var fs = require('fs');
 
 var negativity = require('Sentimental').negativity;
@@ -54,6 +55,8 @@ init_promise.then(function(activeUser){
 
 function signUp(res,username,password)
 {
+	password = crypto.createHash('sha1').update(password + "salt").digest('hex');
+	
 	var promise = Kinvey.User.signup({
 	    username : username,
 	    password : password
@@ -71,6 +74,9 @@ function signUp(res,username,password)
 
 function login(res, username, password)
 {
+	password = crypto.createHash('sha1').update(password + "salt").digest('hex');
+
+	console.log(password);
 	var promise = Kinvey.User.login(username, password, {
 	    success: function(response) {
 	        console.log("Successfully logged in");
@@ -129,8 +135,7 @@ app.get('/api/hash/:word',function(req,res){
 	console.log(hash);
 	console.log("Request for hashtag");
 	
-	storeHashPhrase(hash);
-	res.send(hash);
+	res.send(storeHashPhrase(hash));
 });
 
 app.post('/api/negativity/',function(req,res){
@@ -164,7 +169,7 @@ app.post('/api/logout/',function(req,res){
 app.post('/api/signUp/',function(req,res){
 
 	var username = req.body.username;
-	var password = req.body.username;
+	var password = req.body.password;
 
 	console.log("Request to sign up");
 
