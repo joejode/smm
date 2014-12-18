@@ -30,7 +30,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.get('/', function(req, res) {
-	res.sendFile(__dirname + '/index.html')
+	res.sendFile(__dirname + '/login.html')
 });
 
 env.port = process.env.PORT || env.port;
@@ -56,7 +56,7 @@ init_promise.then(function(activeUser){
 function signUp(res,username,password)
 {
 	password = crypto.createHash('sha1').update(password + "salt").digest('hex');
-	
+
 	var promise = Kinvey.User.signup({
 	    username : username,
 	    password : password
