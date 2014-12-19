@@ -6,8 +6,11 @@
         });
         drawPieChartByNegativityScore();
     });
+    function deleteFromDB() {
+        console.log("DELETED! :D");
+    }
     function addTweetToDom(tweet) {
-        var tweetTemplate = '<div class="col-md-12 col-sm-12">' + '<div class="well"> ' + '<form class="form-horizontal" role="form">' + '<div class="form-group" style="padding:14px;">' + '<div class="form-control height-auto">' + tweet.text + "</div>" + "</div>" + "</form>" + "</div> " + "</div>";
+        var tweetTemplate = '<div class="col-md-12 col-sm-12">' + '<div class="well"> ' + '<form class="form-horizontal" role="form">' + '<div class="form-group" style="padding:14px;">' + '<div class="form-control height-auto">' + tweet.text + "</div>" + "</div>" + '<button class="btn btn-danger float-right" type="button">Bad</button>' + '<button class="btn btn-success margin-right-5" type="button">Good</button>' + "</form>" + "</div> " + "</div>";
         return tweetTemplate;
     }
     $("form").submit(function(e) {
@@ -27,10 +30,17 @@ $.get("/api/authenticate").done(function(data) {
     if (data != null && data != "") {
         user.profile = data;
         $(".media-heading #name").text(user.profile.fname + " " + user.profile.lname);
+        $("#username").text("@" + user.profile.username);
     }
 }).fail(function(err) {
     console.log(err);
 });
+
+function sortByNegativity(tweets) {
+    tweets.sort(function(a, b) {
+        return a.score - b.score;
+    });
+}
 
 function login() {
     user.profile.username = $("#inputEmail").val();
@@ -49,6 +59,17 @@ function logout() {
         window.location.href = "http://localhost:8888/login.html";
     });
 }
+
+String.prototype.hashCode = function() {
+    var hash = 0;
+    if (this.length == 0) return hash;
+    for (i = 0; i < this.length; i++) {
+        char = this.charCodeAt(i);
+        hash = (hash << 5) - hash + char;
+        hash = hash & hash;
+    }
+    return hash;
+};
 
 var newUser = {
     profile: {
