@@ -1,52 +1,51 @@
-
-
 /* ==========================================================================
    Author's custom styles
    ========================================================================== */
-
+/* line 7, ../../src/scss/login.scss */
 body {
   padding-top: 10px;
   padding-bottom: 20px;
   background-color: #eee;
 }
 
+/* line 13, ../../src/scss/login.scss */
 .form-signin {
   max-width: 330px;
   padding: 15px;
   margin: 0 auto;
 }
+
+/* line 19, ../../src/scss/login.scss */
 .form-signin .form-signin-heading,
 .form-signin .checkbox {
   margin-bottom: 10px;
 }
+
+/* line 22, ../../src/scss/login.scss */
 .form-signin .checkbox {
   font-weight: normal;
 }
+
+/* line 25, ../../src/scss/login.scss */
 .form-signin .form-control {
   position: relative;
   height: auto;
   -webkit-box-sizing: border-box;
-     -moz-box-sizing: border-box;
-          box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
   padding: 10px;
   font-size: 16px;
 }
 
+/* line 35, ../../src/scss/login.scss */
 footer {
   padding-top: 20px;
   text-align: center;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+/* line 40, ../../src/scss/login.scss */
+#logo {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
