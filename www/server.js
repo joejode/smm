@@ -8,7 +8,7 @@ var environments = {
 		port: 80
 	}
 };
-environments.development = environments.local; 
+//environments.development = environments.local; 
 
 var env = environments[envKey];
 var express = require('express');
