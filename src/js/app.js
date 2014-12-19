@@ -62,7 +62,21 @@ function setUpUi(profile){
 	if(profile.hashes && profile.hashes.length && profile.hashes.length > 0){
 		for (var i = profile.hashes.length - 1; i >= 0; i--) {
 			var hash ='<li id="'+profile.hashes[i]._id+'" class="list-group-item list-group-item-info"> <span class="badge btn-danger badge-x">X</span> #' + profile.hashes[i].hashtag + '</li>';
+			
 			$('#hashes').append(hash);
+
+			$('li#' + profile.hashes[i]._id +' .badge-x').click(function(){
+				var hash_id = $(this).parent().attr('id');
+
+				$.ajax({
+				    url: '/api/hashtag' + '?' + $.param({"id": hash_id}),
+				    type: 'DELETE',
+				    success: function(result) {
+				        console.log("success");
+				        $('#'+hash_id).remove();
+				    }
+				});
+			})
 		};
 	}
 }

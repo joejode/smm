@@ -139,6 +139,20 @@ app.get('/api/hashtag/:word',function(req,res){
 	res.send(storeHashPhrase(hashtag));
 });
 
+app.delete('/api/hashtag',function(req,res){
+	console.log("DELETE");
+	var hash_id = req.param("id");
+	
+	var promise = Kinvey.DataStore.destroy('Hashes', hash_id, {
+	    success: function(response) {
+	        res.status(200).send(response);
+	    },
+	    error: function(err) {
+	    	res.send(err);
+	    }
+	});
+});
+
 app.post('/api/negativity/',function(req,res){
 	var phrase = req.body.phrase;
 	var scoreObj = negativity(phrase);
@@ -189,7 +203,6 @@ app.get('/api/authenticate', function(req,res){
 	
 });
 
-<<<<<<< HEAD
 app.get('/api/tweets/',function(req,res){
 	console.log("Requesting tweets from DB:");
 	var promise = Kinvey.DataStore.find('Tweets',null,
@@ -204,7 +217,7 @@ app.get('/api/tweets/',function(req,res){
 					}
 				});
 });
-=======
+
 function getUserHashTags(res, userProfile){
 	var query = new Kinvey.Query();
 	query.equalTo('user_id', userProfile._id);
@@ -226,7 +239,6 @@ function getUserHashTags(res, userProfile){
 	    }
 	});
 }
->>>>>>> c4c72ac16f9de80d9bc81a2b4c9dd191a387c9b6
 
 function storeHashPhrase(hash)
 {
