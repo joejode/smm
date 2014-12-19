@@ -5,6 +5,9 @@
 		socket.on('new tweet', function(tweet){
 			$('#tweet_logs').append(addTweetToDom(tweet));
 		});
+
+		drawPieChartByNegativityScore();
+
 	});
 
 	function addTweetToDom(tweet){
@@ -81,6 +84,53 @@ var newUser ={
 	}
 };
 
+
+function loadAllTweets(callback)
+{
+	$.get("/api/tweets", function(data){
+		console.log(data.length);
+			callback(data);
+		});
+}
+
+function drawPieChartByNegativityScore(){
+		loadAllTweets(function(tweets){
+
+			var chartid = "chartSec";
+
+			var count = {};
+			console.log(tweets[0]);
+			//Extract the values
+			tweets.forEach(function(el){
+				if (count[el.negativity_score] === undefined){
+					count[el.negativity_score] = 0;
+				}
+
+				count[el.negativity_score] += 1;
+			});
+
+
+			// Format the data in the way the library expects
+			var recs = [];
+			for (var score in count){
+				console.log(score + count[score]);
+				recs.push([ score, count[score]]);
+			}
+
+			console.log ("sending to chart now");
+			$("#"+chartid).highcharts({
+				title:{
+					text: "Negativity Score distribution"
+				},
+				series:[{
+					type: 'pie',
+					name: 'score',
+					data: recs
+				}]
+			})
+		});
+	}
+		
 
 var hashtag = {
 		"hash" : null
