@@ -42,6 +42,19 @@ var user = {
 	}
 };
 
+function setUpUi(profile){
+	$('.media-heading #name').text(profile.fname + ' ' + profile.lname);
+	$('#username').text('@' + profile.username);
+
+	// adds the hashtag if the user is on a page that is to show it
+	if(profile.hashes && profile.hashes.length && profile.hashes.length > 0){
+		for (var i = profile.hashes.length - 1; i >= 0; i--) {
+			var hash ='<li id="'+profile.hashes[i]._id+'" class="list-group-item list-group-item-info"> #' + profile.hashes[i].hashtag + '</li>';
+			$('#hashes').append(hash);
+		};
+	}
+}
+
 // This is used to check if the user has an active session
 $.get("/api/authenticate")
 	.done(function(data){
@@ -50,8 +63,8 @@ $.get("/api/authenticate")
 		if(data != null && data != ""){
 			user.profile=data;
 
-			$('.media-heading #name').text(user.profile.fname + ' ' + user.profile.lname);
-			$('#username').text('@' + user.profile.username);
+			setUpUi(user.profile);
+			
 		}
 	})
 	.fail(function(err){
@@ -116,13 +129,15 @@ var hashtag = {
 
 function addHashToKinvey()
 {
-	console.log("Adding Hash to Kinvey:");
 
 	hashtag.hash = $("#hash").val();
 	console.log(hashtag.hash);
 	$.post("/api/storeHash/", hashtag)
 	.done(function(){
-		console.log("Successfully added hash to kinvey");
+		var hash ='<li class="list-group-item list-group-item-info"> #' + $("#hash").val() + '</li>';
+		$('#hashes').prepend(hash);
+
+		$('#hash').val(null);
 	})
 	.fail(function(err){
 		console.log("Something went wrong");

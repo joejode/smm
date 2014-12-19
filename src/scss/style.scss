@@ -278,7 +278,7 @@ h3,h4,h5 {
 }
 
 .margin-top-neg-9{
-  margin-top:-9%;
+  margin-top:-11%;
 }
 
 .margin-right-5{
@@ -300,4 +300,12 @@ h3,h4,h5 {
 #tweet_logs{
   max-height: 500px;
   overflow-y: scroll;
+}
+
+#hashes{
+  margin-top: 7%;
+
+  li{
+    margin-bottom: 1%;
+  }
 }

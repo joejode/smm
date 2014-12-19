@@ -563,3 +563,12 @@ h3, h4, h5 {
   max-height: 500px;
   overflow-y: scroll;
 }
+
+/* line 305, ../../src/scss/style.scss */
+#hashes {
+  margin-top: 7%;
+}
+/* line 308, ../../src/scss/style.scss */
+#hashes li {
+  margin-bottom: 1%;
+}
