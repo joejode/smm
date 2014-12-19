@@ -43,7 +43,69 @@ footer {
   text-align: center;
 }
 
-/* line 40, ../../src/scss/login.scss */
+/* line 41, ../../src/scss/login.scss */
+.animate-enter {
+  -webkit-transition: 1s linear all;
+  /* Chrome */
+  transition: 1s linear all;
+  opacity: 0;
+}
+
+/* line 47, ../../src/scss/login.scss */
+.animate-enter.animate-enter-active {
+  opacity: 1;
+}
+
+/* Chrome, Safari, Opera */
+@-webkit-keyframes logoAnimation {
+  /* line 54, ../../src/scss/login.scss */
+  from {
+    -webkit-transform: rotateX(0deg);
+    -webkit-transform: rotateY(0deg);
+  }
+
+  /* line 57, ../../src/scss/login.scss */
+  to {
+    -webkit-transform: rotateX(360deg);
+    -webkit-transform: rotateY(360deg);
+  }
+}
+
+@-moz-keyframes logoAnimation {
+  /* line 63, ../../src/scss/login.scss */
+  from {
+    -moz-transform: rotateX(0deg);
+    -moz-transform: rotateY(0deg);
+  }
+
+  /* line 66, ../../src/scss/login.scss */
+  to {
+    -moz-transform: rotateX(360deg);
+    -moz-transform: rotateY(360deg);
+  }
+}
+
+/* Standard syntax */
+@keyframes logoAnimation {
+  /* line 73, ../../src/scss/login.scss */
+  from {
+    transform: rotateX(0deg);
+    transform: rotateY(0deg);
+  }
+
+  /* line 76, ../../src/scss/login.scss */
+  to {
+    transform: rotateX(360deg);
+    transform: rotateY(360deg);
+  }
+}
+
+/* line 81, ../../src/scss/login.scss */
+#logo {
+  -webkit-animation: logoAnimation 2s ease-in-out 5s infinite;
+}
+
+/* line 85, ../../src/scss/login.scss */
 #logo {
   display: block;
   margin-left: auto;

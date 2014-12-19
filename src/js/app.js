@@ -7,6 +7,10 @@
 		});
 	});
 
+	function deleteFromDB(){
+		console.log("DELETED! :D");
+	}
+
 	function addTweetToDom(tweet){
 			var tweetTemplate='<div class="col-md-12 col-sm-12">'+
 						          '<div class="well"> ' +
@@ -14,6 +18,9 @@
 						                '<div class="form-group" style="padding:14px;">'+
 						                  '<div class="form-control height-auto">'+tweet.text+'</div>'+
 						                '</div>'+
+
+						                '<button class="btn btn-danger float-right" type="button">Bad</button>'+
+						                '<button class="btn btn-success margin-right-5" type="button">Good</button>'+
 						              '</form>'+
 						          '</div> '+
 						     '</div>';
@@ -35,6 +42,7 @@ var user = {
 	}
 };
 
+// This is used to check if the user has an active session
 $.get("/api/authenticate")
 	.done(function(data){
 		console.log(data);
@@ -43,11 +51,19 @@ $.get("/api/authenticate")
 			user.profile=data;
 
 			$('.media-heading #name').text(user.profile.fname + ' ' + user.profile.lname);
+			$('#username').text('@' + user.profile.username);
 		}
 	})
 	.fail(function(err){
 		console.log(err);
 	});
+
+//Takes array of tweets and sorts it by negativity - most negative first.
+function sortByNegativity(tweets){
+	tweets.sort(function(a,b){
+		return a.score-b.score;
+	});
+}
 
 function login()
 {
@@ -70,6 +86,18 @@ function logout (){
 	.done(function(){
 		window.location.href ="http://localhost:8888/login.html";
 	});
+}
+
+//Simple hash function for passwords.
+String.prototype.hashCode = function(){
+	var hash = 0;
+	if (this.length == 0) return hash;
+	for (i = 0; i < this.length; i++) {
+		char = this.charCodeAt(i);
+		hash = ((hash<<5)-hash)+char;
+		hash = hash & hash; // Convert to 32bit integer
+	}
+	return hash;
 }
 
 var newUser ={

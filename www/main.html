@@ -21,7 +21,7 @@
   <div class="col-md-12">
         <div class="navbar-header">
           
-          <a href="#" class="navbar-brand">Bootstrap</a>
+          
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse1">
           <i class="glyphicon glyphicon-search"></i>
           </button>
@@ -40,14 +40,13 @@
             <div class="well well-sm height-132">
              <div class="media">
                   <a class="thumbnail pull-left" href="#">
-                      <img class="media-object" src="//placehold.it/80">
+                      <img id="logo" src="img/smm_crp.png" alt="logo">
                   </a>
                   <div class="media-body">
                         <h4 class="media-heading"><span id="name">John Doe</span></h4>
-                        <p><span class="label label-info">10 photos</span> <span class="label label-primary">89 followers</span></p>
+                        <p><span id="username"> </span> </p>
                         <p>
-                           <a href="#" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-comment"></span> Message</a>
-                           <a href="#" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-heart"></span> Favorite</a>
+                           <a href="#" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-comment disabled"></span> Message</a>
                         </p>
                   </div>
               </div>
@@ -79,7 +78,8 @@
                  <div class="form-group" style="padding:14px;">
                   <input type = "text"  class="form-control" id ="hash" placeholder="Add Hashtag to List" required ></input>
                 </div>
-                <button type ="submit" class="btn btn-success pull-right" id = "addToList"  type="button">Add</button><ul class="list-inline"><li><a href="#"><i class="glyphicon glyphicon-align-left"></i></a></li><li><a href="#"><i class="glyphicon glyphicon-align-center"></i></a></li><li><a href="#"><i class="glyphicon glyphicon-align-right"></i></a></li></ul>
+
+                <button type ="submit" class="btn btn-success" id = "addToList"  type="button">Add</button>
               </form>
           </div> 
      </div>
