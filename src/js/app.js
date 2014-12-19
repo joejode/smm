@@ -5,7 +5,7 @@
 			.done(function(data){
 				console.log(data);
 
-				
+
 			var socket = io.connect();
 			socket.on('new tweet', function(tweet){
 				var tweetSelector;
@@ -163,7 +163,7 @@ function login()
 
 	$.post("/api/login", user.profile)
 	.done(function(data) {
-		window.location.href ="http://localhost:8888/main.html";
+		window.location.href ="http://smm-twitter.herokuapp.com/main.html";
 	 })
 	.fail(function(err) {
 	    console.log("Something went wrong");
@@ -174,7 +174,7 @@ function login()
 function logout (){
 	$.post("/api/logout")
 	.done(function(){
-		window.location.href ="http://localhost:8888/login.html";
+		window.location.href ="http://smm-twitter.herokuapp.com/login.html";
 	});
 }
 
@@ -283,7 +283,7 @@ function signup()
 
 	$.post("/api/signup",newUser.profile)
 	.done(function(data){
-		window.location.href ="http://localhost:8888/main.html";
+		window.location.href ="http://smm-twitter.herokuapp.com/main.html";
 	})
 	.fail(function(err){
 		console.log(err);
