@@ -102,7 +102,7 @@ footer {
 
 /* line 81, ../../src/scss/login.scss */
 #logo {
-  -webkit-animation: logoAnimation 2s ease-in-out 5s infinite;
+  -webkit-animation: logoAnimation 5s ease-in-out 8s infinite;
 }
 
 /* line 85, ../../src/scss/login.scss */
