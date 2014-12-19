@@ -44,7 +44,7 @@ var init_promise = Kinvey.init({
 });
 
 init_promise.then(function(activeUser){
-	console.log("Kinvey successfully initialize");
+	console.log("Kinvey successfully initialized");
 
 	//verify communication with kinvey
 	pingKinvey();
@@ -189,6 +189,22 @@ app.get('/api/authenticate', function(req,res){
 	
 });
 
+<<<<<<< HEAD
+app.get('/api/tweets/',function(req,res){
+	console.log("Requesting tweets from DB:");
+	var promise = Kinvey.DataStore.find('Tweets',null,
+				{
+					success: function(response){
+						res.status(200).send(response);
+						return response;
+				},
+					error: function(err){
+						console.log(err);
+						return err;
+					}
+				});
+});
+=======
 function getUserHashTags(res, userProfile){
 	var query = new Kinvey.Query();
 	query.equalTo('user_id', userProfile._id);
@@ -210,6 +226,7 @@ function getUserHashTags(res, userProfile){
 	    }
 	});
 }
+>>>>>>> c4c72ac16f9de80d9bc81a2b4c9dd191a387c9b6
 
 function storeHashPhrase(hash)
 {
