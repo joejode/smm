@@ -139,8 +139,26 @@ app.get('/api/hashtag/:word',function(req,res){
 	res.send(storeHashPhrase(hashtag));
 });
 
+app.put('/api/tweets', function(req,res){
+	var tweet_id = req.param("id");
+	var tweet_score = req.param("score");
+	console.log("HERE");
+	console.log(tweet_id);
+
+	var promise = Kinvey.DataStore.update('Tweets', {
+	    _id  : tweet_id,
+	    negativity_score: tweet_score
+	}, {
+	    success: function(response) {
+	        res.status(200).send(response);
+	    },
+	    error: function(err) {
+	    	res.send(err);
+	    }
+	});
+});
+
 app.delete('/api/hashtag',function(req,res){
-	console.log("DELETE");
 	var hash_id = req.param("id");
 	
 	var promise = Kinvey.DataStore.destroy('Hashes', hash_id, {
