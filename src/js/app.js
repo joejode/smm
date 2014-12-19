@@ -124,7 +124,7 @@ function login()
 
 	user.profile.username = $("#inputEmail").val();
 	user.profile.password = $("#inputPassword").val();
-console.log(user);
+
 	$.post("/api/login", user.profile)
 	.done(function(data) {
 		window.location.href ="http://localhost:8888/main.html";
@@ -166,10 +166,18 @@ var newUser ={
 
 function loadAllTweets(callback)
 {
-	$.get("/api/tweets", function(data){
-		console.log(data.length);
-			callback(data);
-		});
+	$.get("/api/authenticate")
+	.done(function(data){
+
+		if(data != null && data != ""){
+			$.get("/api/tweets", function(data){
+				callback(data);
+			});
+		}
+	})
+	.fail(function(err){
+	});
+	
 }
 
 function drawPieChartByNegativityScore(){
@@ -178,7 +186,7 @@ function drawPieChartByNegativityScore(){
 			var chartid = "chartSec";
 
 			var count = {};
-			console.log(tweets[0]);
+
 			//Extract the values
 			tweets.forEach(function(el){
 				if (count[el.negativity_score] === undefined){
@@ -192,11 +200,9 @@ function drawPieChartByNegativityScore(){
 			// Format the data in the way the library expects
 			var recs = [];
 			for (var score in count){
-				console.log(score + count[score]);
 				recs.push([ score, count[score]]);
 			}
 
-			console.log ("sending to chart now");
 			$("#"+chartid).highcharts({
 				title:{
 					text: "Negativity Score distribution"
