@@ -1,0 +1,113 @@
+/* ==========================================================================
+   Author's custom styles
+   ========================================================================== */
+/* line 7, ../../src/scss/login.scss */
+body {
+  padding-top: 10px;
+  padding-bottom: 20px;
+  background-color: #eee;
+}
+
+/* line 13, ../../src/scss/login.scss */
+.form-signin {
+  max-width: 330px;
+  padding: 15px;
+  margin: 0 auto;
+}
+
+/* line 19, ../../src/scss/login.scss */
+.form-signin .form-signin-heading,
+.form-signin .checkbox {
+  margin-bottom: 10px;
+}
+
+/* line 22, ../../src/scss/login.scss */
+.form-signin .checkbox {
+  font-weight: normal;
+}
+
+/* line 25, ../../src/scss/login.scss */
+.form-signin .form-control {
+  position: relative;
+  height: auto;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  padding: 10px;
+  font-size: 16px;
+}
+
+/* line 35, ../../src/scss/login.scss */
+footer {
+  padding-top: 20px;
+  text-align: center;
+}
+
+/* line 41, ../../src/scss/login.scss */
+.animate-enter {
+  -webkit-transition: 1s linear all;
+  /* Chrome */
+  transition: 1s linear all;
+  opacity: 0;
+}
+
+/* line 47, ../../src/scss/login.scss */
+.animate-enter.animate-enter-active {
+  opacity: 1;
+}
+
+/* Chrome, Safari, Opera */
+@-webkit-keyframes logoAnimation {
+  /* line 54, ../../src/scss/login.scss */
+  from {
+    -webkit-transform: rotateX(0deg);
+    -webkit-transform: rotateY(0deg);
+  }
+
+  /* line 57, ../../src/scss/login.scss */
+  to {
+    -webkit-transform: rotateX(360deg);
+    -webkit-transform: rotateY(360deg);
+  }
+}
+
+@-moz-keyframes logoAnimation {
+  /* line 63, ../../src/scss/login.scss */
+  from {
+    -moz-transform: rotateX(0deg);
+    -moz-transform: rotateY(0deg);
+  }
+
+  /* line 66, ../../src/scss/login.scss */
+  to {
+    -moz-transform: rotateX(360deg);
+    -moz-transform: rotateY(360deg);
+  }
+}
+
+/* Standard syntax */
+@keyframes logoAnimation {
+  /* line 73, ../../src/scss/login.scss */
+  from {
+    transform: rotateX(0deg);
+    transform: rotateY(0deg);
+  }
+
+  /* line 76, ../../src/scss/login.scss */
+  to {
+    transform: rotateX(360deg);
+    transform: rotateY(360deg);
+  }
+}
+
+/* line 81, ../../src/scss/login.scss */
+#logo {
+  -webkit-animation: logoAnimation 2s ease-in-out 5s infinite;
+}
+
+/* line 85, ../../src/scss/login.scss */
+#logo {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}

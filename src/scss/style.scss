@@ -165,6 +165,7 @@ h3,h4,h5 {
 
 #logo{
   -webkit-animation: logoAnimation 2s ease-in-out 5s infinite; 
+  width:100px;
 }
 
 /*
@@ -270,4 +271,33 @@ h3,h4,h5 {
 
 #main {
  padding-top:120px;
+}
+
+.margin-top-100{
+  margin-top:100px;
+}
+
+.margin-top-neg-11{
+  margin-top:-11%;
+}
+
+.margin-right-5{
+  margin-right:5%;
+}
+
+.height-auto{
+  height:auto !important;
+}
+
+.height-132{
+  height:132px !important;  
+}
+
+.float-right{
+  float: right !important;
+}
+
+#tweet_logs{
+  max-height: 500px;
+  overflow-y: scroll;
 }

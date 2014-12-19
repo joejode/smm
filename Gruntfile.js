@@ -51,7 +51,7 @@ module.exports = function(grunt) {
     watch: {
       karma: {
         files: ['src/js/*.js','src/js/**/*.js','src/partials/*.html','src/partials/**/*.html'],
-        tasks: ['uglify:dist','html2js','compass:dist'] 
+        tasks: ['uglify:dist','compass:dist'] 
       }
     }
   });
