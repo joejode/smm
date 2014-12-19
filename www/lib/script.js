@@ -12,6 +12,11 @@
         var tweetTemplate = '<div class="col-md-12 col-sm-12">' + '<div class="well"> ' + '<form class="form-horizontal" role="form">' + '<div class="form-group" style="padding:14px;">' + '<div class="form-control height-auto">' + tweet.text + "</div>" + "</div>" + '<button class="btn btn-danger float-right" type="button">Bad</button>' + '<button class="btn btn-success margin-right-5" type="button">Good</button>' + "</form>" + "</div> " + "</div>";
         return tweetTemplate;
     }
+    $.get("/api/authenticate").done(function(data) {
+        console.log(data);
+    }).fail(function(err) {
+        console.log(err);
+    });
     $("form").submit(function(e) {
         e.preventDefault();
     });
@@ -29,21 +34,18 @@ function setUpUi(profile) {
     $("#username").text("@" + profile.username);
     if (profile.hashes && profile.hashes.length && profile.hashes.length > 0) {
         for (var i = profile.hashes.length - 1; i >= 0; i--) {
-            var hash = '<li id="' + profile.hashes[i]._id + '" class="list-group-item list-group-item-info"> #' + profile.hashes[i].hashtag + "</li>";
+            var hash = '<li id="' + profile.hashes[i]._id + '" class="list-group-item list-group-item-info"> <span class="badge btn-danger badge-x">X</span> #' + profile.hashes[i].hashtag + "</li>";
             $("#hashes").append(hash);
         }
     }
 }
 
 $.get("/api/authenticate").done(function(data) {
-    console.log(data);
     if (data != null && data != "") {
         user.profile = data;
         setUpUi(user.profile);
     }
-}).fail(function(err) {
-    console.log(err);
-});
+}).fail(function(err) {});
 
 function sortByNegativity(tweets) {
     tweets.sort(function(a, b) {
@@ -97,7 +99,7 @@ function addHashToKinvey() {
     hashtag.hash = $("#hash").val();
     console.log(hashtag.hash);
     $.post("/api/storeHash/", hashtag).done(function() {
-        var hash = '<li class="list-group-item list-group-item-info"> #' + $("#hash").val() + "</li>";
+        var hash = '<li class="list-group-item list-group-item-info"> <span class="badge btn-danger badge-x">X</span> #' + $("#hash").val() + "</li>";
         $("#hashes").prepend(hash);
         $("#hash").val(null);
     }).fail(function(err) {

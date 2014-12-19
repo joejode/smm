@@ -28,6 +28,15 @@
 			return tweetTemplate;
 	}
 	
+	// This is used to check if the user has an active session
+	$.get("/api/authenticate")
+	.done(function(data){
+		console.log(data);
+
+	})
+	.fail(function(err){
+		console.log(err);
+	});
 	$("form").submit(function(e)
 	{
 		e.preventDefault();
@@ -49,7 +58,7 @@ function setUpUi(profile){
 	// adds the hashtag if the user is on a page that is to show it
 	if(profile.hashes && profile.hashes.length && profile.hashes.length > 0){
 		for (var i = profile.hashes.length - 1; i >= 0; i--) {
-			var hash ='<li id="'+profile.hashes[i]._id+'" class="list-group-item list-group-item-info"> #' + profile.hashes[i].hashtag + '</li>';
+			var hash ='<li id="'+profile.hashes[i]._id+'" class="list-group-item list-group-item-info"> <span class="badge btn-danger badge-x">X</span> #' + profile.hashes[i].hashtag + '</li>';
 			$('#hashes').append(hash);
 		};
 	}
@@ -58,18 +67,24 @@ function setUpUi(profile){
 // This is used to check if the user has an active session
 $.get("/api/authenticate")
 	.done(function(data){
-		console.log(data);
 
 		if(data != null && data != ""){
 			user.profile=data;
 
 			setUpUi(user.profile);
-			
 		}
 	})
 	.fail(function(err){
-		console.log(err);
 	});
+/*
+$(document).ready(function(){
+		var socket = io.connect();
+		socket.on('new tweet', function(tweet){
+			$('#tweet_logs').append(addTweetToDom(tweet));
+		});
+	});
+
+*/
 
 //Takes array of tweets and sorts it by negativity - most negative first.
 function sortByNegativity(tweets){
@@ -134,7 +149,7 @@ function addHashToKinvey()
 	console.log(hashtag.hash);
 	$.post("/api/storeHash/", hashtag)
 	.done(function(){
-		var hash ='<li class="list-group-item list-group-item-info"> #' + $("#hash").val() + '</li>';
+		var hash ='<li class="list-group-item list-group-item-info"> <span class="badge btn-danger badge-x">X</span> #' + $("#hash").val() + '</li>';
 		$('#hashes').prepend(hash);
 
 		$('#hash').val(null);

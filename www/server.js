@@ -76,8 +76,12 @@ function signUp(res,username,password, fname, lname)
 	    lname : lname
 	}, {
 	    success: function(response) {
-	        streamTweets();
-	        res.status(200).send(response);
+	        if(response != null){
+				getUserHashTags(res, response);
+			}
+			else{
+				res.status(200).send(userProfile);
+			}
 	    },
 	    error: function(err){
 	    	res.status(400).send(err);
@@ -91,8 +95,12 @@ function login(res, username, password)
 
 	var promise = Kinvey.User.login(username, password, {
 	    success: function(response) {
-	        streamTweets();
-	        res.status(200).send(response)
+	    	if(response != null){
+				getUserHashTags(res, response);
+			}
+			else{
+				res.status(200).send(userProfile);
+			}
 	    },
 	    error: function(err){
 	    	res.status(401).send(err);
@@ -188,6 +196,16 @@ function getUserHashTags(res, userProfile){
 	var promise = Kinvey.DataStore.find('Hashes', query, {
     success: function(response) {
     		userProfile.hashes=response;
+	        
+	        var hashtags = [];
+	        for (var i = userProfile.hashes.length - 1; i >= 0; i--) {
+				hashtags.push('#'+userProfile.hashes[i].hashtag);
+			};
+
+			console.log(hashtags);
+
+	        streamTweets(hashtags);
+
 	        res.status(200).send(userProfile);
 	    }
 	});
@@ -217,8 +235,8 @@ function saveToKinvey(table,obj)
 			});
 }
 
-function streamTweets() {
-	var stream = twitter.stream('statuses/filter',{track:['#'],language:'en'})
+function streamTweets(hashtags) {
+	var stream = twitter.stream('statuses/filter',{track:hashtags,language:'en'})
 	io.on('connection', function(socket){
 		console.log('User connected ... Starting Stream connection');
 
@@ -253,6 +271,9 @@ function streamTweets() {
 			console.log("disconnected");
 		}, 60000);
 	*/
+	},
+	function(err){
+		console.log(err);
 	});
 
 }
