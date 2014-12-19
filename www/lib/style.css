@@ -264,36 +264,48 @@ h3, h4, h5 {
 
 /* Chrome, Safari, Opera */
 @-webkit-keyframes logoAnimation {
+  /* line 139, ../../src/scss/style.scss */
   from {
     -webkit-transform: rotateX(0deg);
     -webkit-transform: rotateY(0deg);
   }
+
+  /* line 142, ../../src/scss/style.scss */
   to {
     -webkit-transform: rotateX(360deg);
     -webkit-transform: rotateY(360deg);
   }
 }
+
 @-moz-keyframes logoAnimation {
+  /* line 148, ../../src/scss/style.scss */
   from {
     -moz-transform: rotateX(0deg);
     -moz-transform: rotateY(0deg);
   }
+
+  /* line 151, ../../src/scss/style.scss */
   to {
     -moz-transform: rotateX(360deg);
     -moz-transform: rotateY(360deg);
   }
 }
+
 /* Standard syntax */
 @keyframes logoAnimation {
+  /* line 158, ../../src/scss/style.scss */
   from {
     transform: rotateX(0deg);
     transform: rotateY(0deg);
   }
+
+  /* line 161, ../../src/scss/style.scss */
   to {
     transform: rotateX(360deg);
     transform: rotateY(360deg);
   }
 }
+
 /* line 166, ../../src/scss/style.scss */
 #logo {
   -webkit-animation: logoAnimation 2s ease-in-out 5s infinite;
@@ -513,4 +525,30 @@ h3, h4, h5 {
 /* line 271, ../../src/scss/style.scss */
 #main {
   padding-top: 120px;
+}
+
+/* line 275, ../../src/scss/style.scss */
+.margin-top-100 {
+  margin-top: 100px;
+}
+
+/* line 279, ../../src/scss/style.scss */
+.margin-top-neg-11 {
+  margin-top: -11%;
+}
+
+/* line 283, ../../src/scss/style.scss */
+.height-auto {
+  height: auto !important;
+}
+
+/* line 287, ../../src/scss/style.scss */
+.height-132 {
+  height: 132px !important;
+}
+
+/* line 291, ../../src/scss/style.scss */
+#tweet_logs {
+  max-height: 500px;
+  overflow-y: scroll;
 }

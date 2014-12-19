@@ -3,7 +3,6 @@
 	$(document).ready(function(){
 		var socket = io.connect();
 		socket.on('new tweet', function(tweet){
-		    console.log(tweet)
 			$('#tweet_logs').append(addTweetToDom(tweet));
 		});
 	});
@@ -13,9 +12,8 @@
 						          '<div class="well"> ' +
 						               '<form class="form-horizontal" role="form">'+
 						                '<div class="form-group" style="padding:14px;">'+
-						                  '<textarea class="form-control">'+tweet.text+'</textarea>'+
+						                  '<div class="form-control height-auto">'+tweet.text+'</div>'+
 						                '</div>'+
-						                '<button class="btn btn-success pull-right" type="button">Post</button><ul class="list-inline"><li><a href="#"><i class="glyphicon glyphicon-align-left"></i></a></li><li><a href="#"><i class="glyphicon glyphicon-align-center"></i></a></li><li><a href="#"><i class="glyphicon glyphicon-align-right"></i></a></li></ul>'+
 						              '</form>'+
 						          '</div> '+
 						     '</div>';
@@ -28,7 +26,6 @@
 		e.preventDefault();
 	});
 
-	
 }(this));
 
 var user = {
@@ -38,18 +35,28 @@ var user = {
 	}
 };
 
+$.get("/api/authenticate")
+	.done(function(data){
+		console.log(data);
 
+		if(data != null && data != ""){
+			user.profile=data;
+
+			$('.media-heading #name').text(user.profile.fname + ' ' + user.profile.lname);
+		}
+	})
+	.fail(function(err){
+		console.log(err);
+	});
 
 function login()
 {
-	console.log("Log in function!");
+
 	user.profile.username = $("#inputEmail").val();
 	user.profile.password = $("#inputPassword").val();
-
+console.log(user);
 	$.post("/api/login", user.profile)
 	.done(function(data) {
-	    console.log("Successfully logged in");
-		console.log(data);
 		window.location.href ="http://localhost:8888/main.html";
 	 })
 	.fail(function(err) {
@@ -61,7 +68,6 @@ function login()
 function logout (){
 	$.post("/api/logout")
 	.done(function(){
-		console.log("Successfully logged out");
 		window.location.href ="http://localhost:8888/login.html";
 	});
 }
@@ -69,26 +75,26 @@ function logout (){
 var newUser ={
 	"profile" : {
 		"username": null,
-		"password": null
+		"password": null,
+		"fname": null,
+		"lname":null
 	}
 };
 
 function signup()
 {
-	console.log("Sign-up function");
+	newUser.profile.fname = $("#inputSignUpFname").val();
+	newUser.profile.lname = $("#inputSignUpLname").val();
 	newUser.profile.username = $("#inputSignUpEmail").val();
 	newUser.profile.password = $("#inputSignUpPassword").val();
 
 	$.post("/api/signup",newUser.profile)
 	.done(function(data){
-		console.log("Successfully signed up");
-		console.log(data);
+		window.location.href ="http://localhost:8888/main.html";
 	})
 	.fail(function(err){
-		console.log("Something went wrong");
 		console.log(err);
 	});
-	console.log(newUser);
 }
 // call the /api/authenticate endpt and check for active user
 // if authenticated then assign values to user object

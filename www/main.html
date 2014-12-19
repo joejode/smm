@@ -32,18 +32,18 @@
               <div class="input-group" style="max-width:470px;">
                 <input type="text" class="form-control" placeholder="Search" name="srch-term" id="srch-term">
                 <div class="input-group-btn">
-                  <button class="btn btn-default btn-primary" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+                  <button class="btn btn-default btn-info" type="submit"><i class="glyphicon glyphicon-search"></i></button>
                 </div>
               </div>
           </form>
           <div class="nav navbar-nav navbar-right">
-            <div class="well well-sm">
+            <div class="well well-sm height-132">
              <div class="media">
                   <a class="thumbnail pull-left" href="#">
                       <img class="media-object" src="//placehold.it/80">
                   </a>
                   <div class="media-body">
-                        <h4 class="media-heading">John Doe</h4>
+                        <h4 class="media-heading"><span id="name">John Doe</span></h4>
                         <p><span class="label label-info">10 photos</span> <span class="label label-primary">89 followers</span></p>
                         <p>
                            <a href="#" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-comment"></span> Message</a>
@@ -52,8 +52,8 @@
                   </div>
               </div>
               <form onSubmit="logout()">
-                <div class="input-group-btn">
-                  <button class="btn btn-default btn-primary " id="signOut" type="submit"><i class="glyphicon "></i> Sign out</button>
+                <div class="pull-right margin-top-neg-11">
+                  <button class="btn btn-info btn-primary " id="signOut" type="submit"><i class="glyphicon "></i> Sign out</button>
                 </div>
             </form>
             </div>
@@ -71,7 +71,7 @@
 
 <!--main-->
 <div class="container" id="main">
-   <div class="row">
+   <div class="row margin-top-100">
      <div class="col-md-4 col-sm-6">
           <div class="well"> 
                <form class="form-horizontal" role="form">
@@ -79,7 +79,6 @@
                  <div class="form-group" style="padding:14px;">
                   <textarea class="form-control" placeholder="Update your status"></textarea>
                 </div>
-                <button class="btn btn-success pull-right" type="button">Post</button><ul class="list-inline"><li><a href="#"><i class="glyphicon glyphicon-align-left"></i></a></li><li><a href="#"><i class="glyphicon glyphicon-align-center"></i></a></li><li><a href="#"><i class="glyphicon glyphicon-align-right"></i></a></li></ul>
               </form>
           </div> 
      </div>

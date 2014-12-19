@@ -50,19 +50,34 @@ init_promise.then(function(activeUser){
 	pingKinvey();
 
 }, function(error) {
-	console.log("Kinvery failed to initialize");
+	console.log("Kinvey failed to initialize");
 });
 
-function signUp(res,username,password)
+function pingKinvey()
+{
+	
+	var ping_promise = Kinvey.ping(); 
+
+	ping_promise.then(function(response){
+		console.log("Kiney Ping Success. Kinvery service is alive, version: " + response.version + ", response: " + response.kinvey);
+	}, function(error){
+		console.log("Kinvey Ping Failed. Response: " + error.description);
+	});	
+}
+
+function signUp(res,username,password, fname, lname)
 {
 	password = crypto.createHash('sha1').update(password + "salt").digest('hex');
 
 	var promise = Kinvey.User.signup({
 	    username : username,
-	    password : password
+	    password : password,
+	    fname : fname,
+	    lname : lname
 	}, {
 	    success: function(response) {
 	        console.log("Successfully signed up");
+	        streamTweets();
 	        res.status(200).send(response);
 	    },
 	    error: function(err){
@@ -80,7 +95,7 @@ function login(res, username, password)
 	var promise = Kinvey.User.login(username, password, {
 	    success: function(response) {
 	        console.log("Successfully logged in");
-	        //streamTweets();
+	        streamTweets();
 	        console.log(response);
 	        res.status(200).send(response)
 	    },
@@ -108,18 +123,6 @@ function logout(res)
 	}
 }
 
-function pingKinvey()
-{
-	
-	var ping_promise = Kinvey.ping(); 
-
-	ping_promise.then(function(response){
-		console.log("Kiney Ping Success. Kinvery service is alive, version: " + response.version + ", response: " + response.kinvey);
-	}, function(error){
-		console.log("Kinvey Ping Failed. Response: " + error.description);
-	});	
-}
-
 // https://github.com/ttezel/twit
 //var stream = twitter.stream('statuses/sample', {language: 'en'});
 /*app.get('/api/user',function(req,res){
@@ -130,12 +133,12 @@ function pingKinvey()
 	});
 });*/
 
-app.get('/api/hash/:word',function(req,res){
-	var hash = req.param("word");
-	console.log(hash);
+app.get('/api/hashtag/:word',function(req,res){
+	var hashtag = req.param("word");
+	console.log(hashtag);
 	console.log("Request for hashtag");
 	
-	res.send(storeHashPhrase(hash));
+	res.send(storeHashPhrase(hashtag));
 });
 
 app.post('/api/negativity/',function(req,res){
@@ -170,14 +173,17 @@ app.post('/api/signUp/',function(req,res){
 
 	var username = req.body.username;
 	var password = req.body.password;
+	var fname = req.body.fname;
+	var lname = req.body.lname;
 
 	console.log("Request to sign up");
 
-	signUp(res,username,password);
+	signUp(res,username,password,fname,lname);
 });
 
-app.get('api/authenticate', function(req,res){
+app.get('/api/authenticate', function(req,res){
 	// check with Kinvey if there is an active user
+	res.status(200).send(Kinvey.getActiveUser());
 });
 
 function storeHashPhrase(hash)
@@ -195,10 +201,10 @@ function saveToKinvey(table,obj)
 	var promise = Kinvey.DataStore.save(table,obj,
 				{
 					success: function(response){
-						console.log("Saved successfully to "+table);
+						//console.log("Saved successfully to "+table);
 				},
 					error:function(err){
-						console.log("Saved to "+table+" Failed");
+						//console.log("Saved to "+table+" Failed");
 						console.log(err);
 				}
 			});
@@ -213,23 +219,20 @@ function streamTweets() {
 		stream.on('tweet', function(tweet){
 			//When Stream is received from twitter
 			io.emit('new tweet' ,tweet); //Send to client via a push
+			var negativeObj = negativity(tweet.text);
 
-			var promise = Kinvey.DataStore.save('Tweets',{
+			var tweetObj = {
 				_id : tweet.id,
 				user_id : Kinvey.getActiveUser()._id,
 				//user_id:tweet.user.id,
 				created_at: tweet.created_at,
-				text: tweet.text
+				text: tweet.text,
+				negativity_score: negativity(tweet.text).score
 
-			}, {
-				success: function(response){
-					console.log("Tweet saved successfully");
-				},
-				error:function(err){
-					console.log("Fail");
-					console.log(err);
-				}
-			});
+
+			};
+
+			saveToKinvey('Tweets',tweetObj);
 		});
 
 		socket.on('disconnect', function(){
