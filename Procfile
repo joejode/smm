@@ -1,1 +1,1 @@
-web: node www/server.js
+web: NODE_ENV=heroku node www/server.js
