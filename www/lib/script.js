@@ -3,12 +3,37 @@
         var socket = io.connect();
         socket.on("new tweet", function(tweet) {
             var tweetSelector;
+            var tweetSelectorId = "#" + tweet._id + " .btn";
             if (tweet.negativity_score == 0) {
                 tweetSelector = $("#tweet_logs #good_tweets");
             } else {
                 tweetSelector = $("#tweet_logs #bad_tweets");
             }
             tweetSelector.append(addTweetToDom(tweet));
+            $(tweetSelectorId).click(function() {
+                var tweet_id = $(this).parent().parent().attr("id");
+                var tweet_score;
+                var tweet_status;
+                if ($(this).hasClass("bad")) {
+                    tweet_score = 50;
+                    tweet_status = $("#tweet_logs #bad_tweets");
+                } else {
+                    tweet_score = 0;
+                    tweet_status = $("#tweet_logs #good_tweets");
+                }
+                $.ajax({
+                    url: "/api/tweets" + "?" + $.param({
+                        id: tweet_id,
+                        score: tweet_score
+                    }),
+                    type: "PUT",
+                    success: function(result) {
+                        console.log("success");
+                        tweet_status.append($("#" + tweet_id).parent());
+                        $("#" + tweet_id).remove();
+                    }
+                });
+            });
         });
         drawPieChartByNegativityScore();
     });
@@ -16,7 +41,7 @@
         console.log("DELETED! :D");
     }
     function addTweetToDom(tweet) {
-        var tweetTemplate = '<div class="col-md-12 col-sm-12">' + '<div class="well"> ' + '<form class="form-horizontal" role="form">' + '<div class="form-group" style="padding:14px;">' + '<div class="form-control height-auto overflow-wrap-break-word">' + tweet.text + "</div>" + "</div>" + '<button class="btn btn-danger float-right" type="button">Bad</button>' + '<button class="btn btn-success margin-right-5" type="button">Good</button>' + "</form>" + "</div> " + "</div>";
+        var tweetTemplate = '<div class="col-md-12 col-sm-12">' + '<div class="well" id = "' + tweet._id + '"> ' + '<form class="form-horizontal" role="form">' + '<div class="form-group" style="padding:14px;">' + '<div class="form-control height-auto overflow-wrap-break-word">' + tweet.text + "</div>" + "</div>" + '<button class="btn btn-danger bad float-right" type="button">Bad</button>' + '<button class="btn btn-success good margin-right-5" type="button">Good</button>' + "</form>" + "</div> " + "</div>";
         return tweetTemplate;
     }
     $.get("/api/authenticate").done(function(data) {
@@ -76,7 +101,6 @@ function sortByNegativity(tweets) {
 function login() {
     user.profile.username = $("#inputEmail").val();
     user.profile.password = $("#inputPassword").val();
-    console.log(user);
     $.post("/api/login", user.profile).done(function(data) {
         window.location.href = "http://localhost:8888/main.html";
     }).fail(function(err) {
@@ -112,17 +136,19 @@ var newUser = {
 };
 
 function loadAllTweets(callback) {
-    $.get("/api/tweets", function(data) {
-        console.log(data.length);
-        callback(data);
-    });
+    $.get("/api/authenticate").done(function(data) {
+        if (data != null && data != "") {
+            $.get("/api/tweets", function(data) {
+                callback(data);
+            });
+        }
+    }).fail(function(err) {});
 }
 
 function drawPieChartByNegativityScore() {
     loadAllTweets(function(tweets) {
         var chartid = "chartSec";
         var count = {};
-        console.log(tweets[0]);
         tweets.forEach(function(el) {
             if (count[el.negativity_score] === undefined) {
                 count[el.negativity_score] = 0;
@@ -131,10 +157,8 @@ function drawPieChartByNegativityScore() {
         });
         var recs = [];
         for (var score in count) {
-            console.log(score + count[score]);
             recs.push([ score, count[score] ]);
         }
-        console.log("sending to chart now");
         $("#" + chartid).highcharts({
             title: {
                 text: "Negativity Score distribution"
