@@ -28,6 +28,6 @@ Suggest more and I will add them or go ahead yourself by editing Gruntfile.js
 
 * Using the terminal, cd into the build directory 
 * Follow the instructions in the README for that directory 
-* Execute `npm start` to start the node server or 'node www/server.js'
+* Execute `npm start` to start the node server or `node www/server.js`
 
 Go to <a href="http://localhost:8888/#/"> http://localhost:8888/#/ </a>
