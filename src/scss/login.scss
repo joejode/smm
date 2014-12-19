@@ -1,0 +1,99 @@
+
+
+/* ==========================================================================
+   Author's custom styles
+   ========================================================================== */
+
+body {
+  padding-top: 10px;
+  padding-bottom: 20px;
+  background-color: #eee;
+}
+
+.form-signin {
+  max-width: 330px;
+  padding: 15px;
+  margin: 0 auto;
+}
+.form-signin .form-signin-heading,
+.form-signin .checkbox {
+  margin-bottom: 10px;
+}
+.form-signin .checkbox {
+  font-weight: normal;
+}
+.form-signin .form-control {
+  position: relative;
+  height: auto;
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+  padding: 10px;
+  font-size: 16px;
+}
+
+footer {
+  padding-top: 20px;
+  text-align: center;
+}
+
+
+.animate-enter {
+  -webkit-transition: 1s linear all; /* Chrome */
+  transition: 1s linear all;
+  opacity: 0;
+}
+ 
+.animate-enter.animate-enter-active {
+  opacity: 1;
+}
+
+
+/* Chrome, Safari, Opera */
+@-webkit-keyframes logoAnimation {
+    from { -webkit-transform: rotateX(0deg);
+        -webkit-transform : rotateY(0deg);
+    }
+    to { -webkit-transform: rotateX(360deg);
+        -webkit-transform : rotateY(360deg);
+    }
+}
+
+@-moz-keyframes logoAnimation {
+  from { -moz-transform: rotateX(0deg);
+        -moz-transform : rotateY(0deg);
+    }
+    to { -moz-transform: rotateX(360deg);
+        -moz-transform : rotateY(360deg);
+    }
+}
+
+/* Standard syntax */
+@keyframes logoAnimation {
+    from { transform: rotateX(0deg);
+          transform : rotateY(0deg);
+    }
+    to { transform: rotateX(360deg);
+        transform : rotateY(360deg);
+    }
+}
+
+#logo{
+  -webkit-animation: logoAnimation 5s ease-in-out 8s infinite; 
+}
+
+#logo{
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+
+
+
+
+
+
+
+

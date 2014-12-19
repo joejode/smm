@@ -2,6 +2,7 @@
  * Import Grid Styles
  */
 @import url(http://fonts.googleapis.com/css?family=Roboto:400);
+@import url(http://fonts.googleapis.com/css?family=Roboto:400);
 /* line 1, ../../src/scss/_grid.scss */
 .grid-70 {
   width: 70%;
@@ -263,37 +264,316 @@ h3, h4, h5 {
 
 /* Chrome, Safari, Opera */
 @-webkit-keyframes logoAnimation {
+  /* line 139, ../../src/scss/style.scss */
   from {
     -webkit-transform: rotateX(0deg);
     -webkit-transform: rotateY(0deg);
   }
+
+  /* line 142, ../../src/scss/style.scss */
   to {
     -webkit-transform: rotateX(360deg);
     -webkit-transform: rotateY(360deg);
   }
 }
+
 @-moz-keyframes logoAnimation {
+  /* line 148, ../../src/scss/style.scss */
   from {
     -moz-transform: rotateX(0deg);
     -moz-transform: rotateY(0deg);
   }
+
+  /* line 151, ../../src/scss/style.scss */
   to {
     -moz-transform: rotateX(360deg);
     -moz-transform: rotateY(360deg);
   }
 }
+
 /* Standard syntax */
 @keyframes logoAnimation {
+  /* line 158, ../../src/scss/style.scss */
   from {
     transform: rotateX(0deg);
     transform: rotateY(0deg);
   }
+
+  /* line 161, ../../src/scss/style.scss */
   to {
     transform: rotateX(360deg);
     transform: rotateY(360deg);
   }
 }
+
 /* line 166, ../../src/scss/style.scss */
 #logo {
   -webkit-animation: logoAnimation 2s ease-in-out 5s infinite;
+  width: 100px;
+}
+
+/*
+A custom Bootstrap 3.2 'Google Plus style' theme
+from http://bootply.com
+
+This CSS code should follow the 'bootstrap.css'
+in your HTML file.
+
+license: MIT
+author: bootply.com
+*/
+/* line 183, ../../src/scss/style.scss */
+body {
+  background-color: #e0e0e0;
+  -webkit-font-smoothing: antialiased;
+  font: normal 14px Roboto,arial,sans-serif;
+}
+
+/* line 188, ../../src/scss/style.scss */
+.navbar-default {
+  background-color: #f4f4f4;
+  margin-top: 50px;
+  border-width: 0;
+  z-index: 5;
+}
+
+/* line 189, ../../src/scss/style.scss */
+.navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > li:hover > a {
+  border: 0 solid #4285f4;
+  border-bottom-width: 2px;
+  font-weight: 800;
+  background-color: transparent;
+}
+
+/* line 190, ../../src/scss/style.scss */
+.navbar-default .dropdown-menu {
+  background-color: #ffffff;
+}
+
+/* line 191, ../../src/scss/style.scss */
+.navbar-default .dropdown-menu li > a {
+  padding-left: 30px;
+}
+
+/* line 193, ../../src/scss/style.scss */
+.header {
+  background-color: #ffffff;
+  border-width: 0;
+}
+
+/* line 194, ../../src/scss/style.scss */
+.header .navbar-collapse {
+  background-color: #ffffff;
+}
+
+/* line 195, ../../src/scss/style.scss */
+.btn, .form-control, .panel, .list-group, .well {
+  border-radius: 1px;
+  box-shadow: 0 0 0;
+}
+
+/* line 196, ../../src/scss/style.scss */
+.form-control {
+  border-color: #d7d7d7;
+}
+
+/* line 197, ../../src/scss/style.scss */
+.btn-primary {
+  border-color: transparent;
+}
+
+/* line 198, ../../src/scss/style.scss */
+.btn-primary, .label-primary, .list-group-item.active, .list-group-item.active:hover, .list-group-item.active:focus {
+  background-color: #4285f4;
+}
+
+/* line 199, ../../src/scss/style.scss */
+.btn-plus {
+  background-color: #ffffff;
+  border-width: 1px;
+  border-color: #dddddd;
+  box-shadow: 1px 1px 0 #999999;
+  border-radius: 3px;
+  color: #666666;
+  text-shadow: 0 0 1px #bbbbbb;
+}
+
+/* line 200, ../../src/scss/style.scss */
+.well, .panel {
+  border-color: #d2d2d2;
+  box-shadow: 0 1px 0 #cfcfcf;
+  border-radius: 3px;
+}
+
+/* line 201, ../../src/scss/style.scss */
+.btn-success, .label-success, .progress-bar-success {
+  background-color: #65b045;
+}
+
+/* line 202, ../../src/scss/style.scss */
+.btn-info, .label-info, .progress-bar-info {
+  background-color: #a0c3ff;
+  border-color: #a0c3ff;
+}
+
+/* line 203, ../../src/scss/style.scss */
+.btn-danger, .label-danger, .progress-bar-danger {
+  background-color: #dd4b39;
+}
+
+/* line 204, ../../src/scss/style.scss */
+.btn-warning, .label-warning, .progress-bar-warning {
+  background-color: #f4b400;
+  color: #444444;
+}
+
+/* line 206, ../../src/scss/style.scss */
+hr {
+  border-color: #ececec;
+}
+
+/* line 207, ../../src/scss/style.scss */
+button {
+  outline: 0;
+}
+
+/* line 210, ../../src/scss/style.scss */
+textarea {
+  resize: none;
+  outline: 0;
+}
+
+/* line 214, ../../src/scss/style.scss */
+.panel .btn i, .btn span {
+  color: #666666;
+}
+
+/* line 217, ../../src/scss/style.scss */
+.panel .panel-heading {
+  background-color: #ffffff;
+  font-weight: 700;
+  font-size: 16px;
+  color: #262626;
+  border-color: #ffffff;
+}
+
+/* line 224, ../../src/scss/style.scss */
+.panel .panel-heading a {
+  font-weight: 400;
+  font-size: 11px;
+}
+
+/* line 228, ../../src/scss/style.scss */
+.panel .panel-default {
+  border-color: #cccccc;
+}
+
+/* line 231, ../../src/scss/style.scss */
+.panel .panel-thumbnail {
+  padding: 0;
+}
+
+/* line 234, ../../src/scss/style.scss */
+.panel .img-circle {
+  width: 50px;
+  height: 50px;
+}
+
+/* line 238, ../../src/scss/style.scss */
+.list-group-item:first-child, .list-group-item:last-child {
+  border-radius: 0;
+}
+
+/* line 241, ../../src/scss/style.scss */
+h3, h4, h5 {
+  border: 0 solid #efefef;
+  border-bottom-width: 1px;
+  padding-bottom: 10px;
+}
+
+/* line 246, ../../src/scss/style.scss */
+.modal-dialog {
+  width: 450px;
+}
+
+/* line 249, ../../src/scss/style.scss */
+.modal-footer {
+  border-width: 0;
+}
+
+/* line 252, ../../src/scss/style.scss */
+.dropdown-menu {
+  background-color: #f4f4f4;
+  border-color: #f0f0f0;
+  border-radius: 0;
+  margin-top: -1px;
+}
+
+/* end theme */
+/* template layout*/
+/* line 261, ../../src/scss/style.scss */
+#subnav {
+  position: fixed;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  /* line 267, ../../src/scss/style.scss */
+  #subnav {
+    padding-top: 6px;
+  }
+}
+/* line 272, ../../src/scss/style.scss */
+#main {
+  padding-top: 120px;
+}
+
+/* line 276, ../../src/scss/style.scss */
+.margin-top-100 {
+  margin-top: 100px;
+}
+
+/* line 280, ../../src/scss/style.scss */
+.margin-top-neg-9 {
+  margin-top: -11%;
+}
+
+/* line 284, ../../src/scss/style.scss */
+.margin-right-5 {
+  margin-right: 5%;
+}
+
+/* line 288, ../../src/scss/style.scss */
+.height-auto {
+  height: auto !important;
+}
+
+/* line 292, ../../src/scss/style.scss */
+.height-132 {
+  height: 132px !important;
+}
+
+/* line 296, ../../src/scss/style.scss */
+.float-right {
+  float: right !important;
+}
+
+/* line 300, ../../src/scss/style.scss */
+.overflow-wrap-break-word {
+  overflow-wrap: break-word;
+}
+
+/* line 304, ../../src/scss/style.scss */
+#tweet_logs {
+  max-height: 500px;
+  overflow-y: scroll;
+}
+
+/* line 309, ../../src/scss/style.scss */
+#hashes {
+  margin-top: 7%;
+}
+/* line 312, ../../src/scss/style.scss */
+#hashes li {
+  margin-bottom: 1%;
 }
