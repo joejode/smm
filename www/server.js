@@ -181,6 +181,15 @@ app.post('/api/signUp/',function(req,res){
 	signUp(res,username,password,fname,lname);
 });
 
+
+app.post('/api/storeHash/',function(req,res){
+	var hash = req.body.hash;
+
+	console.log("Request to store hash: " + hash);
+	res.send(storeHashPhrase(hash));
+
+});
+
 app.get('/api/authenticate', function(req,res){
 	// check with Kinvey if there is an active user
 	res.status(200).send(Kinvey.getActiveUser());
@@ -193,7 +202,7 @@ function storeHashPhrase(hash)
 				hashtag: hash,
 				user_id : Kinvey.getActiveUser()._id,
 			  };
-	saveToKinvey('Hashes',obj);
+	return saveToKinvey('Hashes',obj);
 }
 
 function saveToKinvey(table,obj)
@@ -202,10 +211,12 @@ function saveToKinvey(table,obj)
 				{
 					success: function(response){
 						//console.log("Saved successfully to "+table);
+						return response;
 				},
 					error:function(err){
 						//console.log("Saved to "+table+" Failed");
 						console.log(err);
+						return err;
 				}
 			});
 }

@@ -58,6 +58,21 @@ var newUser = {
     }
 };
 
+var hashtag = {
+    hash: null
+};
+
+function addHashToKinvey() {
+    console.log("Adding Hash to Kinvey:");
+    hashtag.hash = $("#hash").val();
+    console.log(hashtag.hash);
+    $.post("/api/storeHash/", hashtag).done(function() {
+        console.log("Successfully added hash to kinvey");
+    }).fail(function(err) {
+        console.log("Something went wrong");
+    });
+}
+
 function signup() {
     newUser.profile.fname = $("#inputSignUpFname").val();
     newUser.profile.lname = $("#inputSignUpLname").val();
