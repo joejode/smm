@@ -1,48 +1,58 @@
 (function(window){
 
 	$(document).ready(function(){
-		var socket = io.connect();
-		socket.on('new tweet', function(tweet){
-			var tweetSelector;
-			var tweetSelectorId = '#'+tweet._id + ' .btn';
+		$.get("/api/authenticate")
+			.done(function(data){
+				console.log(data);
 
-			if(tweet.negativity_score == 0){
-				tweetSelector = $('#tweet_logs #good_tweets');
-			}
-			else{
-				tweetSelector = $('#tweet_logs #bad_tweets');
-			}
+				
+			var socket = io.connect();
+			socket.on('new tweet', function(tweet){
+				var tweetSelector;
+				var tweetSelectorId = '#'+tweet._id + ' .btn';
 
-			tweetSelector.append(addTweetToDom(tweet));
-
-			$(tweetSelectorId).click(function(){
-				var tweet_id = $(this).parent().parent().attr('id');
-				var tweet_score;
-				var tweet_status;
-				if($(this).hasClass("bad")){
-					tweet_score = 50;
-					tweet_status = $('#tweet_logs #bad_tweets');
+				if(tweet.negativity_score == 0){
+					tweetSelector = $('#tweet_logs #good_tweets');
 				}
 				else{
-					tweet_score = 0;
-					tweet_status = $('#tweet_logs #good_tweets');
+					tweetSelector = $('#tweet_logs #bad_tweets');
 				}
 
-				$.ajax({
-				    url: '/api/tweets' + '?' + $.param({"id": tweet_id, "score":tweet_score}),
-				    type: 'PUT',
-				    success: function(result) {
-				        console.log("success");
+				tweetSelector.append(addTweetToDom(tweet));
 
-				        tweet_status.append($('#'+tweet_id).parent());
-				        $('#'+tweet_id).remove();
-				    }
-				});
-			})
+				$(tweetSelectorId).click(function(){
+					var tweet_id = $(this).parent().parent().attr('id');
+					var tweet_score;
+					var tweet_status;
+					if($(this).hasClass("bad")){
+						tweet_score = 50;
+						tweet_status = $('#tweet_logs #bad_tweets');
+					}
+					else{
+						tweet_score = 0;
+						tweet_status = $('#tweet_logs #good_tweets');
+					}
+
+					$.ajax({
+					    url: '/api/tweets' + '?' + $.param({"id": tweet_id, "score":tweet_score}),
+					    type: 'PUT',
+					    success: function(result) {
+					        console.log("success");
+
+					        tweet_status.append($('#'+tweet_id).parent());
+					        $('#'+tweet_id).remove();
+					    }
+					});
+				})
+			});
+
+			drawPieChartByNegativityScore();
+
+
+		})
+		.fail(function(err){
+			console.log(err);
 		});
-
-		drawPieChartByNegativityScore();
-
 	});
 
 	function deleteFromDB(){
@@ -153,7 +163,7 @@ function login()
 
 	$.post("/api/login", user.profile)
 	.done(function(data) {
-		window.location.href ="https://smm-twitter.herokuapp.com/main.html";
+		window.location.href ="http://localhost:8888/main.html";
 	 })
 	.fail(function(err) {
 	    console.log("Something went wrong");
@@ -164,7 +174,7 @@ function login()
 function logout (){
 	$.post("/api/logout")
 	.done(function(){
-		window.location.href ="https://smm-twitter.herokuapp.com/login.html";
+		window.location.href ="http://localhost:8888/login.html";
 	});
 }
 
@@ -273,7 +283,7 @@ function signup()
 
 	$.post("/api/signup",newUser.profile)
 	.done(function(data){
-		window.location.href ="https://smm-twitter.herokuapp.com/main.html";
+		window.location.href ="http://localhost:8888/main.html";
 	})
 	.fail(function(err){
 		console.log(err);

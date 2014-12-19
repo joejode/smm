@@ -110,11 +110,15 @@ function login(res, username, password)
 
 function logout(res)
 {
+	io.sockets.emit('user disconnected');
+
 	var user = Kinvey.getActiveUser();
 	if(null !== user) {
 	    var promise = Kinvey.User.logout({
 	        success: function(response) {
 	            res.status(200).send(response);
+
+
 	        },
 	        error: function(err) {
 	        	res.status(500).send(err);
