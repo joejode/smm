@@ -277,7 +277,7 @@ h3,h4,h5 {
   margin-top:100px;
 }
 
-.margin-top-neg-11{
+.margin-top-neg-9{
   margin-top:-11%;
 }
 
@@ -297,7 +297,19 @@ h3,h4,h5 {
   float: right !important;
 }
 
+.overflow-wrap-break-word{
+  overflow-wrap: break-word;
+}
+
 #tweet_logs{
   max-height: 500px;
   overflow-y: scroll;
+}
+
+#hashes{
+  margin-top: 7%;
+
+  li{
+    margin-bottom: 1%;
+  }
 }

@@ -2,16 +2,28 @@
     $(document).ready(function() {
         var socket = io.connect();
         socket.on("new tweet", function(tweet) {
-            $("#tweet_logs").append(addTweetToDom(tweet));
+            var tweetSelector;
+            if (tweet.negativity_score == 0) {
+                tweetSelector = $("#tweet_logs #good_tweets");
+            } else {
+                tweetSelector = $("#tweet_logs #bad_tweets");
+            }
+            tweetSelector.append(addTweetToDom(tweet));
         });
+        drawPieChartByNegativityScore();
     });
     function deleteFromDB() {
         console.log("DELETED! :D");
     }
     function addTweetToDom(tweet) {
-        var tweetTemplate = '<div class="col-md-12 col-sm-12">' + '<div class="well"> ' + '<form class="form-horizontal" role="form">' + '<div class="form-group" style="padding:14px;">' + '<div class="form-control height-auto">' + tweet.text + "</div>" + "</div>" + '<button class="btn btn-danger float-right" type="button">Bad</button>' + '<button class="btn btn-success margin-right-5" type="button">Good</button>' + "</form>" + "</div> " + "</div>";
+        var tweetTemplate = '<div class="col-md-12 col-sm-12">' + '<div class="well"> ' + '<form class="form-horizontal" role="form">' + '<div class="form-group" style="padding:14px;">' + '<div class="form-control height-auto overflow-wrap-break-word">' + tweet.text + "</div>" + "</div>" + '<button class="btn btn-danger float-right" type="button">Bad</button>' + '<button class="btn btn-success margin-right-5" type="button">Good</button>' + "</form>" + "</div> " + "</div>";
         return tweetTemplate;
     }
+    $.get("/api/authenticate").done(function(data) {
+        console.log(data);
+    }).fail(function(err) {
+        console.log(err);
+    });
     $("form").submit(function(e) {
         e.preventDefault();
     });
@@ -24,16 +36,36 @@ var user = {
     }
 };
 
+function setUpUi(profile) {
+    $(".media-heading #name").text(profile.fname + " " + profile.lname);
+    $("#username").text("@" + profile.username);
+    if (profile.hashes && profile.hashes.length && profile.hashes.length > 0) {
+        for (var i = profile.hashes.length - 1; i >= 0; i--) {
+            var hash = '<li id="' + profile.hashes[i]._id + '" class="list-group-item list-group-item-info"> <span class="badge btn-danger badge-x">X</span> #' + profile.hashes[i].hashtag + "</li>";
+            $("#hashes").append(hash);
+            $("li#" + profile.hashes[i]._id + " .badge-x").click(function() {
+                var hash_id = $(this).parent().attr("id");
+                $.ajax({
+                    url: "/api/hashtag" + "?" + $.param({
+                        id: hash_id
+                    }),
+                    type: "DELETE",
+                    success: function(result) {
+                        console.log("success");
+                        $("#" + hash_id).remove();
+                    }
+                });
+            });
+        }
+    }
+}
+
 $.get("/api/authenticate").done(function(data) {
-    console.log(data);
     if (data != null && data != "") {
         user.profile = data;
-        $(".media-heading #name").text(user.profile.fname + " " + user.profile.lname);
-        $("#username").text("@" + user.profile.username);
+        setUpUi(user.profile);
     }
-}).fail(function(err) {
-    console.log(err);
-});
+}).fail(function(err) {});
 
 function sortByNegativity(tweets) {
     tweets.sort(function(a, b) {
@@ -79,16 +111,54 @@ var newUser = {
     }
 };
 
+function loadAllTweets(callback) {
+    $.get("/api/tweets", function(data) {
+        console.log(data.length);
+        callback(data);
+    });
+}
+
+function drawPieChartByNegativityScore() {
+    loadAllTweets(function(tweets) {
+        var chartid = "chartSec";
+        var count = {};
+        console.log(tweets[0]);
+        tweets.forEach(function(el) {
+            if (count[el.negativity_score] === undefined) {
+                count[el.negativity_score] = 0;
+            }
+            count[el.negativity_score] += 1;
+        });
+        var recs = [];
+        for (var score in count) {
+            console.log(score + count[score]);
+            recs.push([ score, count[score] ]);
+        }
+        console.log("sending to chart now");
+        $("#" + chartid).highcharts({
+            title: {
+                text: "Negativity Score distribution"
+            },
+            series: [ {
+                type: "pie",
+                name: "score",
+                data: recs
+            } ]
+        });
+    });
+}
+
 var hashtag = {
     hash: null
 };
 
 function addHashToKinvey() {
-    console.log("Adding Hash to Kinvey:");
     hashtag.hash = $("#hash").val();
     console.log(hashtag.hash);
     $.post("/api/storeHash/", hashtag).done(function() {
-        console.log("Successfully added hash to kinvey");
+        var hash = '<li class="list-group-item list-group-item-info"> <span class="badge btn-danger badge-x">X</span> #' + $("#hash").val() + "</li>";
+        $("#hashes").prepend(hash);
+        $("#hash").val(null);
     }).fail(function(err) {
         console.log("Something went wrong");
     });

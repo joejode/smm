@@ -534,7 +534,7 @@ h3, h4, h5 {
 }
 
 /* line 280, ../../src/scss/style.scss */
-.margin-top-neg-11 {
+.margin-top-neg-9 {
   margin-top: -11%;
 }
 
@@ -559,7 +559,21 @@ h3, h4, h5 {
 }
 
 /* line 300, ../../src/scss/style.scss */
+.overflow-wrap-break-word {
+  overflow-wrap: break-word;
+}
+
+/* line 304, ../../src/scss/style.scss */
 #tweet_logs {
   max-height: 500px;
   overflow-y: scroll;
+}
+
+/* line 309, ../../src/scss/style.scss */
+#hashes {
+  margin-top: 7%;
+}
+/* line 312, ../../src/scss/style.scss */
+#hashes li {
+  margin-bottom: 1%;
 }

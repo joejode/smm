@@ -44,7 +44,7 @@ var init_promise = Kinvey.init({
 });
 
 init_promise.then(function(activeUser){
-	console.log("Kinvey successfully initialize");
+	console.log("Kinvey successfully initialized");
 
 	//verify communication with kinvey
 	pingKinvey();
@@ -76,12 +76,14 @@ function signUp(res,username,password, fname, lname)
 	    lname : lname
 	}, {
 	    success: function(response) {
-	        console.log("Successfully signed up");
-	        streamTweets();
-	        res.status(200).send(response);
+	        if(response != null){
+				getUserHashTags(res, response);
+			}
+			else{
+				res.status(200).send(userProfile);
+			}
 	    },
 	    error: function(err){
-	    	console.log(err);
 	    	res.status(400).send(err);
 	    }
 	});
@@ -91,16 +93,16 @@ function login(res, username, password)
 {
 	password = crypto.createHash('sha1').update(password + "salt").digest('hex');
 
-	console.log(password);
 	var promise = Kinvey.User.login(username, password, {
 	    success: function(response) {
-	        console.log("Successfully logged in");
-	        streamTweets();
-	        console.log(response);
-	        res.status(200).send(response)
+	    	if(response != null){
+				getUserHashTags(res, response);
+			}
+			else{
+				res.status(200).send(userProfile);
+			}
 	    },
 	    error: function(err){
-	    	console.log(err);
 	    	res.status(401).send(err);
 	    }
 	});
@@ -112,11 +114,9 @@ function logout(res)
 	if(null !== user) {
 	    var promise = Kinvey.User.logout({
 	        success: function(response) {
-	            console.log("Successfully logged out");
 	            res.status(200).send(response);
 	        },
 	        error: function(err) {
-	        	console.log(err);
 	        	res.status(500).send(err);
 	        }
 	    });
@@ -135,18 +135,27 @@ function logout(res)
 
 app.get('/api/hashtag/:word',function(req,res){
 	var hashtag = req.param("word");
-	console.log(hashtag);
-	console.log("Request for hashtag");
 	
 	res.send(storeHashPhrase(hashtag));
 });
 
+app.delete('/api/hashtag',function(req,res){
+	console.log("DELETE");
+	var hash_id = req.param("id");
+	
+	var promise = Kinvey.DataStore.destroy('Hashes', hash_id, {
+	    success: function(response) {
+	        res.status(200).send(response);
+	    },
+	    error: function(err) {
+	    	res.send(err);
+	    }
+	});
+});
+
 app.post('/api/negativity/',function(req,res){
 	var phrase = req.body.phrase;
-	console.log(phrase);
-	console.log("Request for negativity score");
 	var scoreObj = negativity(phrase);
-	console.log(scoreObj);
 
 	res.send(scoreObj);
 });
@@ -156,27 +165,19 @@ app.post('/api/login/',function(req,res)
 	var username = req.body.username;
 	var password = req.body.password;
 
-	console.log("Request for login");
-	console.log(username);
-	console.log(password);
-	
 	login(res, username,password);
 });
 
 app.post('/api/logout/',function(req,res){
-	console.log("Request for logout");
-	
 	logout(res);
-
 });
+
 app.post('/api/signUp/',function(req,res){
 
 	var username = req.body.username;
 	var password = req.body.password;
 	var fname = req.body.fname;
 	var lname = req.body.lname;
-
-	console.log("Request to sign up");
 
 	signUp(res,username,password,fname,lname);
 });
@@ -185,19 +186,62 @@ app.post('/api/signUp/',function(req,res){
 app.post('/api/storeHash/',function(req,res){
 	var hash = req.body.hash;
 
-	console.log("Request to store hash: " + hash);
 	res.send(storeHashPhrase(hash));
 
 });
 
 app.get('/api/authenticate', function(req,res){
 	// check with Kinvey if there is an active user
-	res.status(200).send(Kinvey.getActiveUser());
+	var userProfile = Kinvey.getActiveUser();
+	
+	if(userProfile != null){
+		getUserHashTags(res, userProfile);
+	}
+	else{
+		res.status(200).send(userProfile);
+	}
+	
 });
+
+app.get('/api/tweets/',function(req,res){
+	console.log("Requesting tweets from DB:");
+	var promise = Kinvey.DataStore.find('Tweets',null,
+				{
+					success: function(response){
+						res.status(200).send(response);
+						return response;
+				},
+					error: function(err){
+						console.log(err);
+						return err;
+					}
+				});
+});
+
+function getUserHashTags(res, userProfile){
+	var query = new Kinvey.Query();
+	query.equalTo('user_id', userProfile._id);
+	
+	var promise = Kinvey.DataStore.find('Hashes', query, {
+    success: function(response) {
+    		userProfile.hashes=response;
+	        
+	        var hashtags = [];
+	        for (var i = userProfile.hashes.length - 1; i >= 0; i--) {
+				hashtags.push('#'+userProfile.hashes[i].hashtag);
+			};
+
+			console.log(hashtags);
+
+	        streamTweets(hashtags);
+
+	        res.status(200).send(userProfile);
+	    }
+	});
+}
 
 function storeHashPhrase(hash)
 {
-	console.log(Kinvey.getActiveUser()._id);
 	var obj = {
 				hashtag: hash,
 				user_id : Kinvey.getActiveUser()._id,
@@ -215,21 +259,20 @@ function saveToKinvey(table,obj)
 				},
 					error:function(err){
 						//console.log("Saved to "+table+" Failed");
-						console.log(err);
 						return err;
 				}
 			});
 }
 
-function streamTweets() {
-	var stream = twitter.stream('statuses/filter',{track:['#'],language:'en'})
+function streamTweets(hashtags) {
+	var stream = twitter.stream('statuses/filter',{track:hashtags,language:'en'})
 	io.on('connection', function(socket){
 		console.log('User connected ... Starting Stream connection');
 
 		//In order to minimise API usage, we only start stream from twitter when user connected
 		stream.on('tweet', function(tweet){
 			//When Stream is received from twitter
-			io.emit('new tweet' ,tweet); //Send to client via a push
+			
 			var negativeObj = negativity(tweet.text);
 
 			var tweetObj = {
@@ -242,6 +285,8 @@ function streamTweets() {
 
 
 			};
+
+			io.emit('new tweet' ,tweetObj); //Send to client via a push
 
 			saveToKinvey('Tweets',tweetObj);
 		});
@@ -257,6 +302,9 @@ function streamTweets() {
 			console.log("disconnected");
 		}, 60000);
 	*/
+	},
+	function(err){
+		console.log(err);
 	});
 
 }
