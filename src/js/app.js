@@ -1,11 +1,11 @@
 (function(window){
 
 	$(document).ready(function(){
-		$.get("/api/authenticate")
+		$.get("/api/authenticate") //Gets active user. If active user exists then content is displayed
 			.done(function(data){
 				console.log(data);
 
-
+			//Retrieves tweet from from stream and displays it to the user
 			var socket = io.connect();
 			socket.on('new tweet', function(tweet){
 				var tweetSelector;
@@ -33,6 +33,7 @@
 						tweet_status = $('#tweet_logs #good_tweets');
 					}
 
+					//PUT request to update negativity score of a particular tweet
 					$.ajax({
 					    url: '/api/tweets' + '?' + $.param({"id": tweet_id, "score":tweet_score}),
 					    type: 'PUT',
@@ -45,7 +46,7 @@
 					});
 				})
 			});
-
+			//Highcharts- used to draw a pie chart
 			drawPieChartByNegativityScore();
 
 
@@ -59,6 +60,7 @@
 		console.log("DELETED! :D");
 	}
 
+	//Adds HTML to the page to display tweets
 	function addTweetToDom(tweet){
 			var tweetTemplate='<div class="col-md-12 col-sm-12">'+
 						          '<div class="well" id = "' + tweet._id +'"> ' +
@@ -85,6 +87,8 @@
 	.fail(function(err){
 		console.log(err);
 	});
+
+	//prevents from from executing default events on submit
 	$("form").submit(function(e)
 	{
 		e.preventDefault();
@@ -99,6 +103,7 @@ var user = {
 	}
 };
 
+//Function to adjust HTML on page as well as display stored hashtags
 function setUpUi(profile){
 	$('.media-heading #name').text(profile.fname + ' ' + profile.lname);
 	$('#username').text('@' + profile.username);
@@ -155,6 +160,7 @@ function sortByNegativity(tweets){
 	});
 }
 
+//Function to log in a user using password and email address
 function login()
 {
 
@@ -163,7 +169,7 @@ function login()
 
 	$.post("/api/login", user.profile)
 	.done(function(data) {
-		window.location.href ="http://smm-twitter.herokuapp.com/main.html";
+		window.location.href ="http://localhost:8888/main.html";
 	 })
 	.fail(function(err) {
 	    console.log("Something went wrong");
@@ -171,10 +177,11 @@ function login()
 	});
 }
 
+//Function to log out a user
 function logout (){
 	$.post("/api/logout")
 	.done(function(){
-		window.location.href ="http://smm-twitter.herokuapp.com/login.html";
+		window.location.href ="http://localhost:8888/login.html";
 	});
 }
 
@@ -199,7 +206,7 @@ var newUser ={
 	}
 };
 
-
+//Function to load tweets after authentication has succeeded
 function loadAllTweets(callback)
 {
 	$.get("/api/authenticate")
@@ -216,6 +223,7 @@ function loadAllTweets(callback)
 	
 }
 
+////Function to create a pie chart basedon negativity scores of tweets stored in the database
 function drawPieChartByNegativityScore(){
 		loadAllTweets(function(tweets){
 
@@ -257,6 +265,7 @@ var hashtag = {
 		"hash" : null
 	};
 
+//Function to store a hashtag to the database
 function addHashToKinvey()
 {
 
@@ -274,6 +283,7 @@ function addHashToKinvey()
 	});
 }
 
+//Function to signup with the application
 function signup()
 {
 	newUser.profile.fname = $("#inputSignUpFname").val();
@@ -283,15 +293,9 @@ function signup()
 
 	$.post("/api/signup",newUser.profile)
 	.done(function(data){
-		window.location.href ="http://smm-twitter.herokuapp.com/main.html";
+		window.location.href =" http://smm-twitter.herokuapp.com/main.html";
 	})
 	.fail(function(err){
 		console.log(err);
 	});
 }
-
-
-// call the /api/authenticate endpt and check for active user
-// if authenticated then assign values to user object
-// else send the user to login page
-

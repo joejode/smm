@@ -107,7 +107,7 @@ function login() {
     user.profile.username = $("#inputEmail").val();
     user.profile.password = $("#inputPassword").val();
     $.post("/api/login", user.profile).done(function(data) {
-        window.location.href = "http://smm-twitter.herokuapp.com/main.html";
+        window.location.href = "http://localhost:8888/main.html";
     }).fail(function(err) {
         console.log("Something went wrong");
         console.log(err);
@@ -116,7 +116,7 @@ function login() {
 
 function logout() {
     $.post("/api/logout").done(function() {
-        window.location.href = "http://smm-twitter.herokuapp.com/login.html";
+        window.location.href = "http://localhost:8888/login.html";
     });
 }
 
@@ -199,7 +199,7 @@ function signup() {
     newUser.profile.username = $("#inputSignUpEmail").val();
     newUser.profile.password = $("#inputSignUpPassword").val();
     $.post("/api/signup", newUser.profile).done(function(data) {
-        window.location.href = "http://smm-twitter.herokuapp.com/main.html";
+        window.location.href = " http://smm-twitter.herokuapp.com/main.html";
     }).fail(function(err) {
         console.log(err);
     });
