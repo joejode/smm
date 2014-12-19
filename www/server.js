@@ -76,12 +76,10 @@ function signUp(res,username,password, fname, lname)
 	    lname : lname
 	}, {
 	    success: function(response) {
-	        console.log("Successfully signed up");
 	        streamTweets();
 	        res.status(200).send(response);
 	    },
 	    error: function(err){
-	    	console.log(err);
 	    	res.status(400).send(err);
 	    }
 	});
@@ -91,16 +89,12 @@ function login(res, username, password)
 {
 	password = crypto.createHash('sha1').update(password + "salt").digest('hex');
 
-	console.log(password);
 	var promise = Kinvey.User.login(username, password, {
 	    success: function(response) {
-	        console.log("Successfully logged in");
 	        streamTweets();
-	        console.log(response);
 	        res.status(200).send(response)
 	    },
 	    error: function(err){
-	    	console.log(err);
 	    	res.status(401).send(err);
 	    }
 	});
@@ -112,11 +106,9 @@ function logout(res)
 	if(null !== user) {
 	    var promise = Kinvey.User.logout({
 	        success: function(response) {
-	            console.log("Successfully logged out");
 	            res.status(200).send(response);
 	        },
 	        error: function(err) {
-	        	console.log(err);
 	        	res.status(500).send(err);
 	        }
 	    });
@@ -135,18 +127,13 @@ function logout(res)
 
 app.get('/api/hashtag/:word',function(req,res){
 	var hashtag = req.param("word");
-	console.log(hashtag);
-	console.log("Request for hashtag");
 	
 	res.send(storeHashPhrase(hashtag));
 });
 
 app.post('/api/negativity/',function(req,res){
 	var phrase = req.body.phrase;
-	console.log(phrase);
-	console.log("Request for negativity score");
 	var scoreObj = negativity(phrase);
-	console.log(scoreObj);
 
 	res.send(scoreObj);
 });
@@ -156,27 +143,19 @@ app.post('/api/login/',function(req,res)
 	var username = req.body.username;
 	var password = req.body.password;
 
-	console.log("Request for login");
-	console.log(username);
-	console.log(password);
-	
 	login(res, username,password);
 });
 
 app.post('/api/logout/',function(req,res){
-	console.log("Request for logout");
-	
 	logout(res);
-
 });
+
 app.post('/api/signUp/',function(req,res){
 
 	var username = req.body.username;
 	var password = req.body.password;
 	var fname = req.body.fname;
 	var lname = req.body.lname;
-
-	console.log("Request to sign up");
 
 	signUp(res,username,password,fname,lname);
 });
@@ -185,16 +164,24 @@ app.post('/api/signUp/',function(req,res){
 app.post('/api/storeHash/',function(req,res){
 	var hash = req.body.hash;
 
-	console.log("Request to store hash: " + hash);
 	res.send(storeHashPhrase(hash));
 
 });
 
 app.get('/api/authenticate', function(req,res){
 	// check with Kinvey if there is an active user
-	res.status(200).send(Kinvey.getActiveUser());
+	var userProfile = Kinvey.getActiveUser();
+	
+	if(userProfile != null){
+		getUserHashTags(res, userProfile);
+	}
+	else{
+		res.status(200).send(userProfile);
+	}
+	
 });
 
+<<<<<<< HEAD
 app.get('/api/tweets/',function(req,res){
 	console.log("Requesting tweets from DB:");
 	var promise = Kinvey.DataStore.find('Tweets',null,
@@ -209,10 +196,22 @@ app.get('/api/tweets/',function(req,res){
 					}
 				});
 });
+=======
+function getUserHashTags(res, userProfile){
+	var query = new Kinvey.Query();
+	query.equalTo('user_id', userProfile._id);
+	
+	var promise = Kinvey.DataStore.find('Hashes', query, {
+    success: function(response) {
+    		userProfile.hashes=response;
+	        res.status(200).send(userProfile);
+	    }
+	});
+}
+>>>>>>> c4c72ac16f9de80d9bc81a2b4c9dd191a387c9b6
 
 function storeHashPhrase(hash)
 {
-	console.log(Kinvey.getActiveUser()._id);
 	var obj = {
 				hashtag: hash,
 				user_id : Kinvey.getActiveUser()._id,
@@ -230,7 +229,6 @@ function saveToKinvey(table,obj)
 				},
 					error:function(err){
 						//console.log("Saved to "+table+" Failed");
-						console.log(err);
 						return err;
 				}
 			});
