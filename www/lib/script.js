@@ -2,7 +2,13 @@
     $(document).ready(function() {
         var socket = io.connect();
         socket.on("new tweet", function(tweet) {
-            $("#tweet_logs").append(addTweetToDom(tweet));
+            var tweetSelector;
+            if (tweet.negativity_score == 0) {
+                tweetSelector = $("#tweet_logs #good_tweets");
+            } else {
+                tweetSelector = $("#tweet_logs #bad_tweets");
+            }
+            tweetSelector.append(addTweetToDom(tweet));
         });
         drawPieChartByNegativityScore();
     });
@@ -10,7 +16,7 @@
         console.log("DELETED! :D");
     }
     function addTweetToDom(tweet) {
-        var tweetTemplate = '<div class="col-md-12 col-sm-12">' + '<div class="well"> ' + '<form class="form-horizontal" role="form">' + '<div class="form-group" style="padding:14px;">' + '<div class="form-control height-auto">' + tweet.text + "</div>" + "</div>" + '<button class="btn btn-danger float-right" type="button">Bad</button>' + '<button class="btn btn-success margin-right-5" type="button">Good</button>' + "</form>" + "</div> " + "</div>";
+        var tweetTemplate = '<div class="col-md-12 col-sm-12">' + '<div class="well"> ' + '<form class="form-horizontal" role="form">' + '<div class="form-group" style="padding:14px;">' + '<div class="form-control height-auto overflow-wrap-break-word">' + tweet.text + "</div>" + "</div>" + '<button class="btn btn-danger float-right" type="button">Bad</button>' + '<button class="btn btn-success margin-right-5" type="button">Good</button>' + "</form>" + "</div> " + "</div>";
         return tweetTemplate;
     }
     $.get("/api/authenticate").done(function(data) {

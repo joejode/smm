@@ -3,7 +3,16 @@
 	$(document).ready(function(){
 		var socket = io.connect();
 		socket.on('new tweet', function(tweet){
-			$('#tweet_logs').append(addTweetToDom(tweet));
+			var tweetSelector;
+
+			if(tweet.negativity_score == 0){
+				tweetSelector = $('#tweet_logs #good_tweets');
+			}
+			else{
+				tweetSelector = $('#tweet_logs #bad_tweets');
+			}
+
+			tweetSelector.append(addTweetToDom(tweet));
 		});
 
 		drawPieChartByNegativityScore();
@@ -19,7 +28,7 @@
 						          '<div class="well"> ' +
 						               '<form class="form-horizontal" role="form">'+
 						                '<div class="form-group" style="padding:14px;">'+
-						                  '<div class="form-control height-auto">'+tweet.text+'</div>'+
+						                  '<div class="form-control height-auto overflow-wrap-break-word">'+tweet.text+'</div>'+
 						                '</div>'+
 
 						                '<button class="btn btn-danger float-right" type="button">Bad</button>'+

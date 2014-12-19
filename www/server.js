@@ -272,7 +272,7 @@ function streamTweets(hashtags) {
 		//In order to minimise API usage, we only start stream from twitter when user connected
 		stream.on('tweet', function(tweet){
 			//When Stream is received from twitter
-			io.emit('new tweet' ,tweet); //Send to client via a push
+			
 			var negativeObj = negativity(tweet.text);
 
 			var tweetObj = {
@@ -285,6 +285,8 @@ function streamTweets(hashtags) {
 
 
 			};
+
+			io.emit('new tweet' ,tweetObj); //Send to client via a push
 
 			saveToKinvey('Tweets',tweetObj);
 		});

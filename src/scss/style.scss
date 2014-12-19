@@ -297,6 +297,10 @@ h3,h4,h5 {
   float: right !important;
 }
 
+.overflow-wrap-break-word{
+  overflow-wrap: break-word;
+}
+
 #tweet_logs{
   max-height: 500px;
   overflow-y: scroll;
