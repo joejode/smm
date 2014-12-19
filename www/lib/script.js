@@ -4,6 +4,7 @@
         socket.on("new tweet", function(tweet) {
             $("#tweet_logs").append(addTweetToDom(tweet));
         });
+        drawPieChartByNegativityScore();
     });
     function addTweetToDom(tweet) {
         var tweetTemplate = '<div class="col-md-12 col-sm-12">' + '<div class="well"> ' + '<form class="form-horizontal" role="form">' + '<div class="form-group" style="padding:14px;">' + '<div class="form-control height-auto">' + tweet.text + "</div>" + "</div>" + "</form>" + "</div> " + "</div>";
@@ -57,6 +58,43 @@ var newUser = {
         lname: null
     }
 };
+
+function loadAllTweets(callback) {
+    $.get("/api/tweets", function(data) {
+        console.log(data.length);
+        callback(data);
+    });
+}
+
+function drawPieChartByNegativityScore() {
+    loadAllTweets(function(tweets) {
+        var chartid = "chartSec";
+        var count = {};
+        console.log(tweets[0]);
+        tweets.forEach(function(el) {
+            if (count[el.negativity_score] === undefined) {
+                count[el.negativity_score] = 0;
+            }
+            count[el.negativity_score] += 1;
+        });
+        var recs = [];
+        for (var score in count) {
+            console.log(score + count[score]);
+            recs.push([ score, count[score] ]);
+        }
+        console.log("sending to chart now");
+        $("#" + chartid).highcharts({
+            title: {
+                text: "Negativity Score distribution"
+            },
+            series: [ {
+                type: "pie",
+                name: "score",
+                data: recs
+            } ]
+        });
+    });
+}
 
 var hashtag = {
     hash: null
